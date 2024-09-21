@@ -23,7 +23,7 @@ class Admin extends Model
         'created_at',
     ];
 
-    static public function getSingle($id)
+    static public function getSingleAdmin($id)
     {
 
         return self::find($id);

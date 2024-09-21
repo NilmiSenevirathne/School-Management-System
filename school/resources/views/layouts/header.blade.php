@@ -165,10 +165,26 @@
             </a>
           </li>
           <li class="nav-item">
+            <a href="{{ url('admin/teacher/list') }}" class="nav-link @if(Request::segment(2)=='teacher')active @endif">
+              <i class="nav-icon far fa-user"></i>
+              <p>
+              Teacher
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="{{ url('admin/student/list') }}" class="nav-link @if(Request::segment(2)=='student')active @endif">
               <i class="nav-icon fas fa-user-graduate"></i>
               <p>
               Student
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url('admin/parent/list') }}" class="nav-link @if(Request::segment(2)=='parent')active @endif">
+              <i class="nav-icon fas fa-user-friends"></i>
+              <p>
+              Parent
               </p>
             </a>
           </li>
@@ -210,6 +226,14 @@
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url('teacher/account') }}" class="nav-link @if(Request::segment(2)=='account')active @endif">
+              <i class="nav-icon fas fa-user-cog"></i>
+              <p>
+              My Account
               </p>
             </a>
           </li>
