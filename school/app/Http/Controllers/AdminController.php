@@ -53,7 +53,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'contact' => 'required|digits_between:10,15',
+            'contact' => 'required|numeric|digits_between:10,15',
             'email' => 'required|email|unique:admin'
         ]);
     
@@ -88,7 +88,7 @@ class AdminController extends Controller
 
     public function edit($id)
     {
-        $data['getRecord'] = Admin::getSingle($id);
+        $data['getRecord'] = Admin::getSingleAdmin($id);
 
         if(!empty($data['getRecord']))
         {
@@ -109,7 +109,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
-            'contact' => 'required|digits_between:10,15',
+            'contact' => 'required|numeric|digits_between:10,15',
             'email' => 'required|email|unique:users,email,' . $id . ',id|unique:admin,email,' . $id . ',id',
         ]);
        

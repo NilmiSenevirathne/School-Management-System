@@ -7,7 +7,9 @@ use App\Models\Student;
 use App\Models\ParentModel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Hash;
 
 class ParentController extends Controller
@@ -303,5 +305,6 @@ class ParentController extends Controller
 
           return redirect()->back()->with('success', 'Account updated successfully');
         }
+
 
 }

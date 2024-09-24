@@ -78,10 +78,12 @@ class ParentModel extends Model
         }
     }
 
+
       //get parent account information
   
 public static function getParentAccount($email)
 {
     return self::where('email', $email)->first();
 }
+
 }

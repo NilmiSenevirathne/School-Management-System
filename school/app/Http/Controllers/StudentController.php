@@ -42,7 +42,7 @@ class StudentController extends Controller
             'class_id' => 'required',
             'gender' => 'required|in:Male,Female',
             'date_of_birth' => 'required|date|before:today',
-            'contact' => 'required|digits_between:10,15',
+            'contact' => 'required|numeric|digits_between:10,15',
             'admission_date' => 'required|date|before_or_equal:today',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:0,1', // Assuming 0 for Active, 1 for Inactive
@@ -139,7 +139,7 @@ class StudentController extends Controller
             'class_id' => 'required',
             'gender' => 'required|in:Male,Female',
             'date_of_birth' => 'required|date|before:today',
-            'contact' => 'required|digits_between:10,15',
+            'contact' => 'required|numeric|digits_between:10,15',
             'admission_date' => 'required|date|before_or_equal:today',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|in:0,1', // Assuming 0 for Active, 1 for Inactive

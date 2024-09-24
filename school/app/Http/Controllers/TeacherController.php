@@ -133,7 +133,9 @@ class TeacherController extends Controller
             'address' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
             'date_of_birth' => 'required|date|before:today',
+
             'date_of_join' => 'required',
+
             'contact' => 'required|numeric|digits_between:10,15',
             'qualification' => 'required|string|max:255',
             'experience' => 'required|string|max:255',
@@ -173,7 +175,11 @@ class TeacherController extends Controller
             $file = $request->file('profile_picture');
             $randomStr = Str::random(20);
             $filename = strtolower($randomStr).'.'.$ext;
+
             $file->move('uploads/teacher/', $filename);
+
+            $file->move('uploads/profile/', $filename);
+
 
             $teacher->profile_picture = $filename;
 
@@ -239,6 +245,7 @@ class TeacherController extends Controller
              return redirect('admin/teacher/list')->with('error', 'Teacher not found');
          }
      }
+
 
      public function TeacherAccount()
      {
