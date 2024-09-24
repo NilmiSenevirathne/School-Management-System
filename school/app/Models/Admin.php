@@ -57,4 +57,11 @@ class Admin extends Model
         return $return;
     }
 
+      //get  admin information
+ 
+public static function getAdminAccount($email)
+{
+    return self::where('email', $email)->first();
+}
+
 }

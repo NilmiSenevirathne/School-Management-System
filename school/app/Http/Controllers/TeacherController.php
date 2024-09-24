@@ -133,7 +133,9 @@ class TeacherController extends Controller
             'address' => 'required|string|max:255',
             'gender' => 'required|in:Male,Female',
             'date_of_birth' => 'required|date|before:today',
-            'date_of_birth' => 'required',
+
+            'date_of_join' => 'required',
+
             'contact' => 'required|numeric|digits_between:10,15',
             'qualification' => 'required|string|max:255',
             'experience' => 'required|string|max:255',
@@ -173,7 +175,11 @@ class TeacherController extends Controller
             $file = $request->file('profile_picture');
             $randomStr = Str::random(20);
             $filename = strtolower($randomStr).'.'.$ext;
+
+            $file->move('uploads/teacher/', $filename);
+
             $file->move('uploads/profile/', $filename);
+
 
             $teacher->profile_picture = $filename;
 
@@ -240,7 +246,82 @@ class TeacherController extends Controller
          }
      }
 
-   
+
+     public function TeacherAccount()
+     {
+         // Get the current logged-in user's email
+         $email = Auth::user()->email;
+     
+         // Fetch the teacher's details from the teachers table based on the email
+         $data['getRecord'] = Teacher::getTeacherAccount($email);
+     
+         // Add any additional data if needed
+         $data['header_title'] = "My Account";
+     
+         // Return the view with the fetched data
+         return view('teacher.myaccount', $data);
+     }
+
+     public function UpdateTeacherAccount(Request $request)
+{
+    $email = Auth::user()->email; // Get logged-in user's email
+    
+    request()->validate([
+        'name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'address' => 'required|string|max:255',
+        'gender' => 'required|in:Male,Female',
+        'date_of_birth' => 'required|date|before:today', 
+        'contact' => 'required|numeric|digits_between:10,15',
+        'qualification' => 'required|string|max:255',
+        'experience' => 'required|string|max:255',
+        'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+    ]);
+
+    // Fetch the teacher's record based on their email
+    $teacher = Teacher::where('email', $email)->firstOrFail();
+    
+    // Update the teacher's details
+    $teacher->name = trim($request->name);
+    $teacher->last_name = trim($request->last_name);
+    $teacher->address = trim($request->address);
+    $teacher->gender = trim($request->gender);
+    $teacher->date_of_birth = trim($request->date_of_birth);
+    $teacher->contact = trim($request->contact);
+    
+    // Update profile picture if uploaded
+    if (!empty($request->file('profile_picture'))) {
+        if (!empty($teacher->profile_picture)) {
+            // Delete the old profile picture
+            unlink('uploads/teacher/' . $teacher->profile_picture);
+        }
+        $ext = $request->file('profile_picture')->getClientOriginalExtension();
+        $randomStr = Str::random(20);
+        $filename = strtolower($randomStr) . '.' . $ext;
+        $request->file('profile_picture')->move('uploads/teacher/', $filename);
+
+        $teacher->profile_picture = $filename;
+    }
+
+    $teacher->qualification = trim($request->qualification);
+    $teacher->experience = trim($request->experience);
+    $teacher->email = trim($request->email);
+
+    $teacher->save();
+
+    // Update the corresponding User record based on the email
+    $user = User::where('email', $email)->first();
+    if ($user) {
+        $user->name = trim($request->name);
+        $user->last_name = trim($request->last_name);
+        $user->email = trim($request->email);
+        $user->save();
+    }
+
+    return redirect()->back()->with('success', 'Account updated successfully');
+}
+
+
 
 
 }

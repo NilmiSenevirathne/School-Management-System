@@ -7,6 +7,9 @@ use App\Models\Student;
 use App\Models\ParentModel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Hash;
 
 class ParentController extends Controller
@@ -225,5 +228,83 @@ class ParentController extends Controller
         return redirect()->back()->with('success', 'Student Assign Deleted Successfully');
 
      }
+
+     public function parentAccount()
+     {
+         // Get the current logged-in user's email
+         $email = Auth::user()->email;
+     
+         // Fetch the parent's details from the parent table based on the email
+         $data['getRecord'] = ParentModel::getParentAccount($email);
+     
+         // Add any additional data if needed
+         $data['header_title'] = "My Account";
+     
+         // Return the view with the fetched data
+         return view('parent.myaccount', $data);
+     }
+
+     public function UpdateParentAccount(Request $request)
+     {
+        $email = Auth::user()->email; // Get logged-in user's email
+
+        request()->validate([
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
+            'occupation' => 'required|string|max:255',
+            'contact' => 'required|numeric|digits_between:10,15',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+           // 'email' => 'required|email|unique:parent,email|unique:users,email',
+            
+        ]);
+
+         // Fetch the parent's record based on their email
+        $parent = ParentModel::where('email', $email)->firstOrFail();
+        $parent->name = trim($request->name);
+        $parent->last_name = trim($request->last_name);
+        $parent->address = trim($request->address);
+        $parent->gender = trim($request->gender);
+        $parent->occupation = trim($request->occupation);
+        $parent->contact = trim($request->contact);
+       
+
+        if(!empty($request->file('profile_picture')))
+        {
+            if(!empty($parent->getParentProfile()))
+            {
+              unlink('uploads/parent/'.$parent->profile_picture); // Delete the old profile picture
+            }
+            $ext = $request->file('profile_picture')->getClientOriginalExtension();
+            $file = $request->file('profile_picture');
+            $randomStr = Str::random(20);
+            $filename = strtolower($randomStr).'.'.$ext;
+            $file->move('uploads/parent/', $filename);
+
+            $parent->profile_picture = $filename;
+
+        }
+
+        $parent->email = trim($request->email);
+      
+        $parent->save();
+
+          // Find the corresponding User record based on the email
+          $user = User::where('email', $request->old_email)->first();
+          if ($user) {
+              // Update User record with the same details as Admin
+              $user->name = trim($request->name);
+              $user->last_name = trim($request->last_name);
+              $user->email = trim($request->email);
+              if (!empty($request->password)) {
+                  $user->password = Hash::make($request->password);
+              }
+              $user->save();
+          }
+
+          return redirect()->back()->with('success', 'Account updated successfully');
+        }
+
 
 }

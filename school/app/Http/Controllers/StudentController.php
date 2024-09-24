@@ -7,6 +7,7 @@ use App\Models\Student;
 use App\Models\ClassModel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class StudentController extends Controller
@@ -237,4 +238,89 @@ class StudentController extends Controller
     }
 }
 
-}
+//get student profile
+ public function studentAccount()
+     {
+         // Get the current logged-in user's email
+         $email = Auth::user()->email;
+     
+         // Fetch the teacher's details from the teachers table based on the email
+         $data['getRecord'] = Student::getStudentAccount($email);
+     
+         // Add any additional data if needed
+         $data['header_title'] = "My Account";
+     
+         // Return the view with the fetched data
+         return view('student.myaccount', $data);
+     }
+
+     public function UpdateStudentAccount(Request $request)
+     {
+        $email = Auth::user()->email; // Get logged-in user's email
+
+          // Validate email for both tables
+          request()->validate([
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'gender' => 'required|in:Male,Female',
+            'date_of_birth' => 'required|date|before:today',
+            'contact' => 'required|numeric|digits_between:10,15',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            //'email' => 'required|email|unique:student,email|unique:users,email',
+             
+        ]);
+        //update student record
+        $student = Student::where('email', $email)->firstOrFail();
+        $student->name = trim($request->name);
+        $student->last_name = trim($request->last_name);
+        $student->address = trim($request->address);
+        $student->gender = trim($request->gender);
+
+        if(!empty($request->date_of_birth))
+        {
+            $student->date_of_birth = trim($request->date_of_birth);
+
+        }
+    
+
+        if(!empty($request->file('profile_picture')))
+        {
+            if(!empty($student->getStudentProfile()))
+            {
+              unlink('uploads/profile/'.$student->profile_picture); // Delete the old profile picture
+            }
+            $ext = $request->file('profile_picture')->getClientOriginalExtension();
+            $file = $request->file('profile_picture');
+            $randomStr = Str::random(20);
+            $filename = strtolower($randomStr).'.'.$ext;
+            $file->move('uploads/profile/', $filename);
+
+            $student->profile_picture = $filename;
+
+        }
+
+        $student->email = trim($request->email);
+
+     
+       
+        $student->save();
+
+          // Find the corresponding User record based on the email
+          $user = User::where('email', $request->old_email)->first();
+          if ($user) {
+              // Update User record with the same details as Admin
+              $user->name = trim($request->name);
+              $user->last_name = trim($request->last_name);
+              $user->email = trim($request->email);
+              
+              $user->save();
+          }
+  
+          return redirect()->back()->with('success', 'Account updated successfully');
+        }
+       
+    }
+     
+    
+

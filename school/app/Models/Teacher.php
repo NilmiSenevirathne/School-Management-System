@@ -38,6 +38,15 @@ class Teacher extends Model
         return self::find($id);
     }
 
+
+  //get Teacher account information
+   // Teacher.php (Model)
+public static function getTeacherAccount($email)
+{
+    return self::where('email', $email)->first();
+}
+
+
     static public function getTeacher()
     {
         $return = self::select('teacher.*')
