@@ -37,6 +37,13 @@ class Student extends Model
         return self::find($id);
     }
 
+     //get student account information
+  
+public static function getStudentAccount($email)
+{
+    return self::where('email', $email)->first();
+}
+
 
     static public function getStudent()
     {

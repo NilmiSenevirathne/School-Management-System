@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
@@ -165,5 +166,59 @@ public function delete($email)
     }
 }
 
+public function AdminAccount()
+{
+    // Get the current logged-in user's email
+    $email = Auth::user()->email;
+
+    // Fetch the admin's details from the teachers table based on the email
+    $data['getRecord'] = Admin::getAdminAccount($email);
+
+    // Add any additional data if needed
+    $data['header_title'] = "My Account";
+
+    // Return the view with the fetched data
+    return view('admin.myaccount', $data);
+}
+
+public function UpdateAdminAccount(Request $request)
+{
+    $email = Auth::user()->email; // Get logged-in user's email
+
+    request()->validate([
+        'name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'address' => 'required|string|max:255',
+        'contact' => 'required|numeric|digits_between:10,15',
+       // 'email' => 'required|email|unique:users,email,' . $id . ',id|unique:admin,email,' . $id . ',id',
+    ]);
+   
+
+    // Update Admin record
+    $admin = Admin::where('email', $email)->firstOrFail();
+    $admin->name = trim($request->name);
+    $admin->last_name = trim($request->last_name);
+    $admin->address = trim($request->address);
+    $admin->email = trim($request->email);
+   
+    $admin->save();
+
+    // Find the corresponding User record based on the email
+    $user = User::where('email', $request->old_email)->first();
+    if ($user) {
+        // Update User record with the same details as Admin
+        $user->name = trim($request->name);
+        $user->last_name = trim($request->last_name);
+        $user->email = trim($request->email);
+        
+        $user->save();
+    }
+
+    return redirect()->back()->with('success', 'Account updated successfully');
 
 }
+}
+
+
+
+

@@ -80,6 +80,9 @@ Route::group(['middleware' => 'admin'],function(){
     Route::get('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'edit_single']);
     Route::post('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'update_single']);
    
+    //my aacount
+    Route::get('admin/account', [AdminController::class,'AdminAccount']);
+    Route::post('admin/account', [AdminController::class,'UpdateAdminAccount']);
     //change password
 
     Route::get('admin/change-password', [UserController::class, 'changePassword']);
@@ -96,6 +99,14 @@ Route::group(['middleware' => 'teacher'],function(){
 
     Route::get('teacher/change-password', [UserController::class, 'changePassword']);
     Route::post('teacher/change-password', [UserController::class, 'UpdatePassword']);
+<<<<<<< Updated upstream
+=======
+
+    Route::get('teacher/account', [TeacherController::class,'TeacherAccount']);
+    Route::post('teacher/account', [TeacherController::class,'UpdateTeacherAccount']);
+
+
+>>>>>>> Stashed changes
 
 });
 
@@ -106,6 +117,8 @@ Route::group(['middleware' => 'student'],function(){
     Route::get('student/change-password', [UserController::class, 'changePassword']);
     Route::post('student/change-password', [UserController::class, 'UpdatePassword']);
   
+    Route::get('student/account', [StudentController::class,'studentAccount']);
+    Route::post('student/account', [StudentController::class,'UpdateStudentAccount']);
 });
 
 Route::group(['middleware' => 'parent'],function(){
@@ -114,5 +127,8 @@ Route::group(['middleware' => 'parent'],function(){
 
     Route::get('parent/change-password', [UserController::class, 'changePassword']);
     Route::post('parent/change-password', [UserController::class, 'UpdatePassword']);
+
+    Route::get('parent/account', [ParentController::class,'parentAccount']);
+    Route::post('parent/account', [ParentController::class,'UpdateParentAccount']);
 
 });
