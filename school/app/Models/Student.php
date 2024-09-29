@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Student extends Model
 {
     use HasFactory;
+
     protected $table = 'student';
+
     protected $fillable = [
         'id',
         'parent_id',
@@ -32,69 +34,59 @@ class Student extends Model
         'created_at',
     ];
 
-    static public function getSingleStudent($id)
+    public static function getSingleStudent($id)
     {
 
         return self::find($id);
     }
 
-     //get student account information
-  
-public static function getStudentAccount($email)
-{
-    return self::where('email', $email)->first();
-}
+    //get student account information
 
-
-    static public function getStudent()
+    public static function getStudentAccount($email)
     {
-        $return = self::select('student.*','class.name as class_name','parent.name as parent_name','parent.last_name as parent_last_name')
-        ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')
-        ->join('class','class.id','=','student.class_id','left')
-        ->where('student.is_delete','=',0);
+        return self::where('email', $email)->first();
+    }
 
-        if(!empty(Request::get('name')))
-        {
-           $return = $return->where('student.name','like','%'.Request::get('name').'%');
+    public static function getStudent()
+    {
+        $return = self::select('student.*', 'class.name as class_name', 'parent.name as parent_name', 'parent.last_name as parent_last_name')
+            ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')
+            ->join('class', 'class.id', '=', 'student.class_id', 'left')
+            ->where('student.is_delete', '=', 0);
+
+        if (! empty(Request::get('name'))) {
+            $return = $return->where('student.name', 'like', '%'.Request::get('name').'%');
         }
-        if(!empty(Request::get('last_name')))
-        {
-           $return = $return->where('student.last_name','like','%'.Request::get('last_name').'%');
+        if (! empty(Request::get('last_name'))) {
+            $return = $return->where('student.last_name', 'like', '%'.Request::get('last_name').'%');
         }
 
-         if(!empty(Request::get('email')))
-         {
-            $return = $return->where('student.email','like','%'.Request::get('email').'%');
-         }
-         if(!empty(Request::get('class')))
-         {
-            $return = $return->where('class.name','like','%'.Request::get('class').'%');
-         }
-         if (!empty(Request::get('gender'))) {
+        if (! empty(Request::get('email'))) {
+            $return = $return->where('student.email', 'like', '%'.Request::get('email').'%');
+        }
+        if (! empty(Request::get('class'))) {
+            $return = $return->where('class.name', 'like', '%'.Request::get('class').'%');
+        }
+        if (! empty(Request::get('gender'))) {
             $return = $return->where('student.gender', '=', Request::get('gender'));
         }
-        
-         
-         if(!empty(Request::get('admission_date')))
-         {
-            $return = $return->whereDate('student.admission_date','=',Request::get('admission_date'));
-         }
 
-        $return = $return->orderBy('student.id','desc')
-        ->paginate(20);
+        if (! empty(Request::get('admission_date'))) {
+            $return = $return->whereDate('student.admission_date', '=', Request::get('admission_date'));
+        }
+
+        $return = $return->orderBy('student.id', 'desc')
+            ->paginate(20);
 
         return $return;
     }
 
     public function getStudentProfile()
     {
-        if(!empty($this->profile_picture) && file_exists('uploads/profile/'.$this->profile_picture))
-        {
-          return url ('uploads/profile/'.$this->profile_picture);
-        }
-        else
-        {
-          return "";
+        if (! empty($this->profile_picture) && file_exists('uploads/profile/'.$this->profile_picture)) {
+            return url('uploads/profile/'.$this->profile_picture);
+        } else {
+            return '';
         }
     }
 
@@ -124,7 +116,7 @@ public static function getStudentAccount($email)
     //      {
     //         $return = $return->where('student.email','like','%'.Request::get('email').'%');
     //      }
-        
+
     //     $return = $return->orderBy('student.id','desc')
     //     ->limit(50)
     //     ->get();
@@ -132,51 +124,41 @@ public static function getStudentAccount($email)
     //     return $return;
     //    }
     // }
-    static public function getSearchStudent()
-{
-    if (!empty(Request::get('id')) || !empty(Request::get('name')) || !empty(Request::get('last_name')) || !empty(Request::get('email'))) {
-        $return = self::select('student.*',  'parent.name as parent_name')//  $return = self::select('student.*', 'class.name as class_name', 'parent.name as parent_name')
-            //->leftJoin('class', 'class.id', '=', 'student.class_id')  // Ensure the 'class' join is a left join
-            ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')  // Use leftJoin for parent join
-            ->where('student.is_delete', '=', 0);
-        
-        // Search by ID, name, last name, or email
-        if (!empty(Request::get('id'))) {
-            $return->where('student.id', '=', Request::get('id'));
-        }
-        if (!empty(Request::get('name'))) {
-            $return->where('student.first_name', 'LIKE', '%' . Request::get('name') . '%');
-        }
-        if (!empty(Request::get('last_name'))) {
-            $return->where('student.last_name', 'LIKE', '%' . Request::get('last_name') . '%');
-        }
-        if (!empty(Request::get('email'))) {
-            $return->where('student.email', 'LIKE', '%' . Request::get('email') . '%');
+    public static function getSearchStudent()
+    {
+        if (! empty(Request::get('id')) || ! empty(Request::get('name')) || ! empty(Request::get('last_name')) || ! empty(Request::get('email'))) {
+            $return = self::select('student.*', 'parent.name as parent_name')//  $return = self::select('student.*', 'class.name as class_name', 'parent.name as parent_name')
+                //->leftJoin('class', 'class.id', '=', 'student.class_id')  // Ensure the 'class' join is a left join
+                ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')  // Use leftJoin for parent join
+                ->where('student.is_delete', '=', 0);
+
+            // Search by ID, name, last name, or email
+            if (! empty(Request::get('id'))) {
+                $return->where('student.id', '=', Request::get('id'));
+            }
+            if (! empty(Request::get('name'))) {
+                $return->where('student.first_name', 'LIKE', '%'.Request::get('name').'%');
+            }
+            if (! empty(Request::get('last_name'))) {
+                $return->where('student.last_name', 'LIKE', '%'.Request::get('last_name').'%');
+            }
+            if (! empty(Request::get('email'))) {
+                $return->where('student.email', 'LIKE', '%'.Request::get('email').'%');
+            }
+
+            // Return the results
+            return $return->get();
         }
 
-        // Return the results
-        return $return->get();
+        return [];
     }
-    
 
-    return [];
-}
-
-         static public function getMyStudent($parent_id)
-         {
-            if (!empty(Request::get('id')) || !empty(Request::get('name')) || !empty(Request::get('last_name')) || !empty(Request::get('email'))) {
-                $return = self::select('student.*',  'parent.name as parent_name')//  $return = self::select('student.*', 'class.name as class_name', 'parent.name as parent_name')
-                    //->leftJoin('class', 'class.id', '=', 'student.class_id')  // Ensure the 'class' join is a left join
-                    ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')  // Use leftJoin for parent join
-                    ->where('student.parent_id','=',$parent_id)
-                    ->where('student.is_delete', '=', 0);
-                
-               
-        
-                // Return the results
-                return $return->get();
-         }
-         return [];
-
-}
+    public static function getMyStudent($parent_id)
+    {
+        return self::select('student.*', 'parent.name as parent_name', 'parent.last_name as parent_last_name')
+            ->leftJoin('parent as parent', 'parent.id', '=', 'student.parent_id')
+            ->where('student.parent_id', '=', $parent_id)
+            ->where('student.is_delete', '=', 0)
+            ->get();
+    }
 }
