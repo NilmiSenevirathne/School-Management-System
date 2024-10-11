@@ -57,12 +57,35 @@
                     </tr>
                   </thead>
                   <tbody>
-                    
+                     
+                  @foreach ($getRecord as $value)
+                    <tr>
+                        <td>{{ $value->id }}</td>
+                        <td>{{ $value->class_name }}</td>
+                        <td>{{ $value->teacher_name }}</td>
 
+                        <td>
+                            @if($value->status == 0)
+                            Active
+                            @else
+                            Inactive
+                            @endif
+                        </td>
+                        <td>{{ $value->created_by_name }}</td>
+                        <td>{{date('d-m-Y H:i A',strtotime($value->created_at)) }}</td>
+                        <td>
+                            <a href ="{{ url('admin/assign-subject/edit/'.$value->id) }}" class ="btn btn-primary">Edit</a>
+                            <a href ="{{ url('admin/assign-subject/edit_single/'.$value->id) }}" class ="btn btn-primary">Edit Single</a>
+                            <a href ="{{ url('admin/assign-subject/delete/'.$value->id) }}" class ="btn btn-danger">Delete</a>
+                        </td>
+
+                    </tr>
+                    @endforeach
+  
                   </tbody>
                 </table>
                 <div style ="padding:10px; float:right;">
-
+                    {!! $getRecord->appends(Illuminate\Support\Facades\Request::except('page'))->links() !!}
                 </div>
               </div>
               <!-- /.card-body -->
