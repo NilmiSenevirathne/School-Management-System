@@ -11,6 +11,7 @@ use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AssignClassTeacherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -111,6 +112,20 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/change-password', [UserController::class, 'changePassword']);
     Route::post('admin/change-password', [UserController::class, 'UpdatePassword']);
 
+
+
+    //assign-class teacher
+    Route::get('admin/assign_class_teacher/list', [AssignClassTeacherController::class, 'list'])
+    ->name('admin.assign_class_teacher.list'); // Named route for listing
+
+    Route::get('admin/assign_class_teacher/add', [AssignClassTeacherController::class, 'add'])
+    ->name('admin.assign_class_teacher.add'); // Named route for adding
+
+    Route::post('admin/assign_class_teacher/add', [AssignClassTeacherController::class, 'insert'])
+    ->name('admin.assign_class_teacher.insert');
+
+
+
 });
 
 Route::group(['middleware' => 'teacher'], function () {
@@ -122,6 +137,10 @@ Route::group(['middleware' => 'teacher'], function () {
 
     Route::get('teacher/account', [TeacherController::class, 'TeacherAccount']);
     Route::post('teacher/account', [TeacherController::class, 'UpdateTeacherAccount']);
+
+    Route::get('teacher/my_class_subject', [TeacherController::class, 'MyClassSubject']);
+
+
 
 });
 
