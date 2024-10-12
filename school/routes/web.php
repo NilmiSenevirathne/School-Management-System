@@ -124,6 +124,21 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/assign_class_teacher/add', [AssignClassTeacherController::class, 'insert'])
     ->name('admin.assign_class_teacher.insert');
 
+    Route::get('admin/assign_class_teacher/edit/{id}', [AssignClassTeacherController::class, 'edit'])
+    ->name('admin.assign_class_teacher.edit');
+
+    Route::post('admin/assign_class_teacher/edit/{id}', [AssignClassTeacherController::class, 'update'])
+    ->name('admin.assign_class_teacher.update');
+
+    Route::get('admin/assign_class_teacher/edit_single/{id}', [AssignClassTeacherController::class, 'edit_single'])
+    ->name('admin.assign_class_teacher.edit_single');
+
+    Route::post('admin/assign_class_teacher/edit_single/{id}', [AssignClassTeacherController::class, 'update_single'])
+    ->name('admin.assign_class_teacher.update_single');
+
+    Route::get('admin/assign_class_teacher/delete/{id}', [AssignClassTeacherController::class, 'delete'])
+    ->name('admin.assign_class_teacher.delete');
+
 
 
 });

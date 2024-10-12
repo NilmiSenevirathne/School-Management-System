@@ -11,11 +11,14 @@ class AssignClassTeacherModel extends Model
     protected $table = 'assign_class_teacher';
     protected $fillable = ['class_id', 'teacher_id', 'status', 'created_by', 'is_delete'];
 
-    public static function getAlreadyFirst($class_id, $teacher_id)
+
+    
+    public function getSingle($id)
     {
-        return self::where('class_id', '=', $class_id)->where('teacher_id', '=', $teacher_id)->first();
+       return self::find($id);
     }
 
+    
     //method to get records
    public static function getRecord()
 {
@@ -35,6 +38,23 @@ class AssignClassTeacherModel extends Model
 
     return $return;
 }
+
+    public static function getAlreadyFirst($class_id, $teacher_id)
+    {
+        return self::where('class_id', '=', $class_id)->where('teacher_id', '=', $teacher_id)->first();
+    }
+
+
+    static public function getAssignTeacherID($class_id)
+    {
+        return self::where('class_id', '=', $class_id)->where('is_delete','=',0)->get();
+    }
+
+    static public function deleteTeacher($class_id)
+    {
+        return self::where('class_id', '=', $class_id)->delete();
+    }
+
 
     
 }
