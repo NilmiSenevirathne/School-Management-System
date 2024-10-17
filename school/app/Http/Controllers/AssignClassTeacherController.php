@@ -184,8 +184,13 @@ public function delete($id)
     }
 }
 
-
-
+//function side work
+public function MyClassSubject()
+    {
+        $data['getRecord']= AssignClassTeacherModel::getMyClassSubject(Auth::User()->id);
+        $data['header_title'] = "My Class & Subject";
+        return view('teacher.my_class_subject', $data);
+    }
 
 
 }
