@@ -12,6 +12,7 @@ use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AssignClassTeacherController;
+use App\Http\Controllers\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -139,7 +140,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/assign_class_teacher/delete/{id}', [AssignClassTeacherController::class, 'delete'])
     ->name('admin.assign_class_teacher.delete');
 
-
+    //Attendance
+    Route::get('admin/attendance/student', [AttendanceController::class, 'AttendanceStudent']);
 
 });
 
