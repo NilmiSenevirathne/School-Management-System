@@ -319,6 +319,15 @@ class StudentController extends Controller
   
           return redirect()->back()->with('success', 'Account updated successfully');
         }
+
+
+        //teacher side work
+        public function MyStudent()
+        {
+            $data['getRecord'] = Student::getStudent();
+            $data['header_title'] ="My_Student List";
+            return view('admin.teacher.my_student',$data);
+        }
        
     }
      
