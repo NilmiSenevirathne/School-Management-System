@@ -20,41 +20,39 @@ class AssignClassTeacherModel extends Model
 
     
     //method to get records
-   public static function getRecord()
-{
-    $return = self::select(
-            'assign_class_teacher.*', 
-            'class.name as class_name', 
-            'teacher.name as teacher_name', // Selecting teacher name
-            'users.name as created_by_name'
-        )
-        ->join('class', 'class.id', '=', 'assign_class_teacher.class_id')
-        ->join('teacher', 'teacher.id', '=', 'assign_class_teacher.teacher_id') // Ensure this join is correct
-        ->join('users', 'users.id', '=', 'assign_class_teacher.created_by')
-        ->where('assign_class_teacher.is_delete', '=', 0);
-        if(!empty (Request::get('class_name')))
-        {
-            $return = $return->where('class.name','like','%'.Request::get('class_name').'%');
+    public static function getRecord()
+    {
+        $return = self::select(
+                'assign_class_teacher.*', 
+                'class.name as class_name', 
+                'teacher.name as teacher_name',
+                'users.name as created_by_name'
+            )
+            ->join('class', 'class.id', '=', 'assign_class_teacher.class_id')
+            ->join('teacher', 'teacher.id', '=', 'assign_class_teacher.teacher_id')
+            ->join('users', 'users.id', '=', 'assign_class_teacher.created_by')
+            ->where('assign_class_teacher.is_delete', '=', 0);
+        
+        if (!empty(Request::get('class_name'))) {
+            $return = $return->where('class.name', 'like', '%' . Request::get('class_name') . '%');
         }
-        if(!empty (Request::get('teacher_name')))
-        {
-            $return = $return->where('teacher.name','like','%'.Request::get('teacher_name').'%');
+        if (!empty(Request::get('teacher_name'))) {
+            $return = $return->where('teacher.name', 'like', '%' . Request::get('teacher_name') . '%');
         }
         if (!empty(Request::get('status'))) {
             $status = (Request::get('status') == 100) ? 0 : 1; 
             $return = $return->where('assign_class_teacher.status', '=', $status);
         }
-        if(!empty (Request::get('date')))
-        {
-            $return = $return->whereDate('assign_class_teacher.created_at','=',Request::get('date'));
+        if (!empty(Request::get('date'))) {
+            $return = $return->whereDate('assign_class_teacher.created_at', '=', Request::get('date'));
         }
 
+        $return = $return->orderBy('assign_class_teacher.id', 'desc')
+            ->paginate(100);
 
-    $return = $return->orderBy('assign_class_teacher.id', 'desc')
-        ->paginate(10);
+        return $return;
+    }
 
-    return $return;
-}
 
 static public function getMyClassSubject($teacher_id)
 {
