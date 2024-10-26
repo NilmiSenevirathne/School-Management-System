@@ -60,9 +60,27 @@
                 </div>
                 <div clss="card-body p-0" style="overflow: auto;">
                     <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Student Name</th>
+                                <th>Attendance</th>
+                            </tr>
+                        </thead>
                         <tbody>
-                            @if(!empty($getSubject) && !empty($getSubject->count()))
-                            <tr></tr>
+                            @if(!empty($getStudent) && !empty($getStudent->count()))
+                                @foreach($getStudent as $value)
+                                <tr>
+                                    <td>{{ $value->id }}</td>
+                                    <td>{{ $value->name }} {{ $value->last_name }}</td>
+                                    <td>
+                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Present</label>
+                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Late</label>
+                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Absent</label>
+                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Half Day</label>
+                                    </td>
+                                </tr>
+                                @endforeach
                             @endif
                         </tbody>
                     </table>
