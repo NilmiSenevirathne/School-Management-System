@@ -1,18 +1,19 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClassController;
-use App\Http\Controllers\ClassSubjectController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ParentController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\TeacherController;
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AssignClassTeacherController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\ClassSubjectController;
+use App\Http\Controllers\ExaminationsController;
+use App\Http\Controllers\AssignClassTeacherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -142,6 +143,20 @@ Route::group(['middleware' => 'admin'], function () {
 
     //Attendance
     Route::get('admin/attendance/student', [AttendanceController::class, 'AttendanceStudent']);
+
+     //Examination
+
+     Route::get('admin/examinations/exam/list', [ExaminationsController::class, 'exam_list']);
+     Route::get('admin/examinations/exam/add', [ExaminationsController::class, 'exam_add']);
+     Route::post('admin/examinations/exam/add', [ExaminationsController::class, 'exam_insert']);
+     Route::get('admin/examinations/exam/edit/{id}', [ExaminationsController::class, 'exam_edit']);
+     Route::post('admin/examinations/exam/edit/{id}', [ExaminationsController::class, 'exam_update']);
+     Route::get('admin/examinations/exam/delete/{id}', [ExaminationsController::class, 'exam_delete']);
+
+
+     //exam schedule
+     Route::get('admin/examinations/exam_schedule', [ExaminationsController::class, 'exam_schedule']);
+     Route::post('admin/examinations/exam_schedule_insert', [ExaminationsController::class, 'exam_schedule_insert']);
 
 });
 
