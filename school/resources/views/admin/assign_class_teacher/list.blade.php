@@ -7,9 +7,9 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Assign Class Teacher (Total: {{ count($getRecord) }})</h1>
+            <h1>Assign Class Teacher (Total: {{ $getRecord->count() }})</h1>
           </div>
-          <div class="col-sm-6" style="text-align:right;">
+          <div class="col-sm-6 text-right">
             <a href="{{ url('admin/assign_class_teacher/add') }}" class="btn btn-primary">Add New Assign Class Teacher</a>
           </div>
         </div>
@@ -42,11 +42,14 @@
                                 <!-- Status -->
                                 <div class="form-group col-md-2">
                                     <label>Status</label>
-                                    <select class="form-control" name="status">
-                                        <option value="">Select</option>
-                                        <option {{ (Request::get('status') == 100) ? 'selected' : '' }} value="100">Active</option>
-                                        <option {{ (Request::get('status') == 1) ? 'selected' : '' }} value="1">Inactive</option>
+                                    <select name="status" class="form-control">
+                                        <option value="">Select Status</option>
+                                        <option value="1" {{ Request::get('status') == '1' ? 'selected' : '' }}>Active</option>
+                                        <option value="0" {{ Request::get('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                     </select>
+
+                                   
+
                                 </div>
 
                                 <!-- Date -->
@@ -91,26 +94,28 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(!empty($getRecord) && count($getRecord) > 0)
+                            @if($getRecord->isNotEmpty())
                                 @foreach ($getRecord as $value)
                                     <tr>
                                         <td>{{ $value->id }}</td>
-                                        <!-- Modify these lines based on the actual properties returned -->
-                                        <td>{{ $value->class_name ?? 'N/A' }}</td> <!-- Updated line -->
-                                        <td>{{ $value->teacher_name ?? 'N/A' }}</td> <!-- Updated line -->
+                                        <td>{{ $value->class->name ?? 'N/A' }}</td> <!-- Fetch class name -->
+                                        <td>{{ $value->teacher->name ?? 'N/A' }}</td> <!-- Fetch teacher name -->
                                         <td>
-                                            @if($value->status == 0)
-                                                Active
-                                            @else
-                                                Inactive
-                                            @endif
+                                            {{ $value->status == 0 ? 'Active' : 'Inactive' }}
                                         </td>
-                                        <td>{{ $value->created_by_name }}</td>
+                                        <td>{{ $value->user->name ?? 'N/A' }}</td> <!-- Fetch created by name -->
                                         <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
                                         <td>
                                             <a href="{{ route('admin.assign_class_teacher.edit', $value->id) }}" class="btn btn-primary">Edit</a>
-                                            <a href="{{ route('admin.assign_class_teacher.edit_single', $value->id) }}" class="btn btn-primary">Edit Single</a>
-                                            <a href="{{ route('admin.assign_class_teacher.delete', $value->id) }}" class="btn btn-danger">Delete</a>
+                                            <a href="{{ route('admin.assign_class_teacher.edit_single', $value->id) }}" class="btn btn-warning">Edit Single</a>
+                                            
+                                            <form action="{{ route('admin.assign_class_teacher.delete', $value->id) }}" method="POST" style="display:inline;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                            </form>
+
+
                                         </td>
                                     </tr>
                                 @endforeach

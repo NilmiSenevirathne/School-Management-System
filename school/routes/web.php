@@ -138,7 +138,7 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/assign_class_teacher/edit_single/{id}', [AssignClassTeacherController::class, 'update_single'])
     ->name('admin.assign_class_teacher.update_single');
 
-    Route::get('admin/assign_class_teacher/delete/{id}', [AssignClassTeacherController::class, 'delete'])
+    Route::delete('admin/assign_class_teacher/delete/{id}', [AssignClassTeacherController::class, 'delete'])
     ->name('admin.assign_class_teacher.delete');
 
     //Attendance
