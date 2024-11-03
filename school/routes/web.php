@@ -14,6 +14,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ClassSubjectController;
 use App\Http\Controllers\ExaminationsController;
 use App\Http\Controllers\AssignClassTeacherController;
+use App\Http\Controllers\ClassTimetableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -106,6 +107,12 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'edit_single']);
     Route::post('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'update_single']);
 
+    // class-timetable
+    Route::get('admin/class_timetable/list', [ClassTimetableController::class, 'list']);
+    Route::post('admin/class_timetable/get_subject', [ClassTimetableController::class, 'get_subject']);
+    Route::post('admin/class_timetable/add', [ClassTimetableController::class, 'insert_update']);
+
+
     //my aacount
     Route::get('admin/account', [AdminController::class, 'AdminAccount']);
     Route::post('admin/account', [AdminController::class, 'UpdateAdminAccount']);
@@ -157,6 +164,12 @@ Route::group(['middleware' => 'admin'], function () {
      //exam schedule
      Route::get('admin/examinations/exam_schedule', [ExaminationsController::class, 'exam_schedule']);
      Route::post('admin/examinations/exam_schedule_insert', [ExaminationsController::class, 'exam_schedule_insert']);
+
+     Route::get('admin/examinations/marks_register', [ExaminationsController::class, 'marks_register']);
+     Route::post('admin/examinations/submit_marks_register', [ExaminationsController::class, 'submit_marks_register']);
+     Route::post('admin/examinations/single_submit_marks_register', [ExaminationsController::class, 'single_submit_marks_register']);
+
+
 
 });
 

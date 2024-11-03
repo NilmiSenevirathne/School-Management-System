@@ -24,6 +24,10 @@ class ExamSchedule extends Model
         'created_by',
         'created_at',
     ];
+    static public function getSingle($id)
+    {
+        return self::find($id);
+    }
 
     static public function getRecordSingle($exam_id,$class_id,$subject_id)
     {
@@ -59,4 +63,18 @@ static public function getExamTimetable($exam_id, $class_id)
         ->get();
 }
 
+static public function getSubject($exam_id, $class_id)
+{
+    return ExamSchedule::select('exam_schedule.*', 'subject.name as subject_name', 'subject.type as subject_type')
+        ->join('subject', 'subject.id', '=', 'exam_schedule.subject_id') // Ensure correct join condition
+        ->where('exam_schedule.exam_id', '=', $exam_id)
+        ->where('exam_schedule.class_id', '=', $class_id)
+        ->distinct() // Ensures unique records
+        ->get();
+}
+
+static public function getMark($student_id,$exam_id,$class_id,$subject_id)
+{
+    return MarksRegister::CheckAlreadyMark($student_id,$exam_id,$class_id,$subject_id);
+}
 }
