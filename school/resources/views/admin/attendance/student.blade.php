@@ -35,13 +35,21 @@
             <div class="card-body">
               <div class ="row">
                 <div class="form-group col-md-3">
-                    <label >Student Name</label>
-                    <input type="text" class="form-control" value ="{{ Request::get('class_id') }}" name ="class_id" placeholder="Enter name" required>
+                    <label >Class Name</label>
+                    <select class="form-control" id="getClass" name = "class_id" required>
+                      <option value="">Select class</option>
+                      @foreach($getClass as $class)
+                        <option value="{{ $class->id }}" {{ Request::get('class_id') == $class->id ? 'selected' : '' }} >
+                          {{ $class->name }}
+                        </option>
+                      @endforeach
+                    </select>
+                    <!--<input type="text" class="form-control" id="getStudentName" value ="{{ Request::get('class_id') }}" name ="class_id" placeholder="Enter name" required>-->
                   </div>
             
               <div class="form-group col-md-3">
                 <label>Date</label>
-                <input type="date" class="form-control" value ="{{ Request::get('attendance_date') }}" required name ="attendance_date"   placeholder="Enter Email">
+                <input type="date" class="form-control" id="getAttendanceDate" value ="{{ Request::get('attendance_date') }}" required name ="attendance_date"   placeholder="Enter Email">
               </div>
 
               <div class="form-group col-md-3">
@@ -70,14 +78,22 @@
                         <tbody>
                             @if(!empty($getStudent) && !empty($getStudent->count()))
                                 @foreach($getStudent as $value)
+                                 @php
+                                  $attendance_type = '';
+                                  $getAttendance = $value->getAttendance($value->id,Request::get('class_id'),Request::get('attendance_date'));
+                                  if(!empty($getAttendance->attendance_type))
+                                  {
+                                    $attendance_type = $getAttendance->attendance_type;
+                                  }
+                                 @endphp 
                                 <tr>
                                     <td>{{ $value->id }}</td>
                                     <td>{{ $value->name }} {{ $value->last_name }}</td>
                                     <td>
-                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Present</label>
-                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Late</label>
-                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Absent</label>
-                                        <label style="margin-right: 10px;"><input type="radio" name="attendance{{ $value->id }}">Half Day</label>
+                                        <label style="margin-right: 10px;"><input value="1" type="radio" {{ ($attendance_type == '1' ) ? 'checked' : '' }} id="{{ $value->id }}" class="SaveAttendance" name="attendance{{ $value->id }}">Present</label>
+                                        
+                                        <label style="margin-right: 10px;"><input value="2" type="radio" {{ ($attendance_type == '2' ) ? 'checked' : '' }} id="{{ $value->id }}" class="SaveAttendance" name="attendance{{ $value->id }}">Absent</label>
+                                        
                                     </td>
                                 </tr>
                                 @endforeach
@@ -93,5 +109,35 @@
 
    
   
+
+@endsection
+
+@section('script').
+
+<script type="text/javascript">
+  $('.SaveAttendance').change(function(e){
+    var student_id = $(this).attr('id');
+    var attendance_type = $(this).val();
+    var class_id = $('#getClass').val();
+    var attendance_date = $('#getAttendanceDate').val();
+
+    $.ajax({
+      type: "POST",
+      url: "{{ url('admin/attendance/student/save') }}",
+      data : {
+        "_token": "{{ csrf_token() }}",
+        student_id : student_id,
+        attendance_type : attendance_type,
+        class_id : class_id,
+        attendance_date : attendance_date,
+
+      },
+      dataType : "json",
+      success: function(data){ 
+        alert(data.message);
+      }
+    });
+  });
+</script>
 
 @endsection

@@ -328,6 +328,7 @@ class StudentController extends Controller
             $data['header_title'] ="My_Student List";
             return view('admin.teacher.my_student',$data);
         }
+
        
     }
      
