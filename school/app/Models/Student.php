@@ -161,4 +161,13 @@ class Student extends Model
             ->where('student.is_delete', '=', 0)
             ->get();
     }
+
+    public static function getStudentClass($class_id)
+    {
+        return  self::select('student.id','student.name','student.last_name')
+            ->where('student.is_delete', '=', 0)
+            ->where('student.class_id', '=', $class_id)
+            ->orderBy('student.id', 'desc')
+            ->get(20);
+    }
 }
