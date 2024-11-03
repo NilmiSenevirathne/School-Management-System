@@ -14,6 +14,7 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ClassSubjectController;
 use App\Http\Controllers\ExaminationsController;
 use App\Http\Controllers\AssignClassTeacherController;
+use App\Http\Controllers\ClassTimetableController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,6 +106,12 @@ Route::group(['middleware' => 'admin'], function () {
 
     Route::get('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'edit_single']);
     Route::post('admin/assign-subject/edit_single/{id}', [ClassSubjectController::class, 'update_single']);
+
+    // class-timetable
+    Route::get('admin/class_timetable/list', [ClassTimetableController::class, 'list']);
+    Route::post('admin/class_timetable/get_subject', [ClassTimetableController::class, 'get_subject']);
+    Route::post('admin/class_timetable/add', [ClassTimetableController::class, 'insert_update']);
+
 
     //my aacount
     Route::get('admin/account', [AdminController::class, 'AdminAccount']);
