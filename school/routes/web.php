@@ -200,6 +200,7 @@ Route::group(['middleware' => 'student'], function () {
     Route::post('student/change-password', [UserController::class, 'UpdatePassword']);
 
     Route::get('student/my_subject', [SubjectController::class, 'MySubject']);
+    Route::get('student/my_timetable',[ClassTimetableController::class, 'MyTimetable']);
     Route::get('student/my_examtimetable',[ExaminationsController::class, 'MyExamTimetable']);
 
 
