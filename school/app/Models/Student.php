@@ -170,4 +170,20 @@ class Student extends Model
             ->orderBy('student.id', 'desc')
             ->get(20);
     }
+
+    static public function getStudentClassA($class_id)
+    {
+       return self::select('student.id','student.name','student.last_name')
+                        ->where('user_type','=',3)
+                        ->where('is_delete','=',0)
+                        ->where('class_id','=',$class_id)
+                        ->orderBy('id','desc')
+                        ->get();
+            
+    }
+
+    static public function getAttendance($student_id, $class_id, $attendance_date)
+    {
+        return StudentAttendanceModel::CheckAlreadyAttendance($student_id, $class_id, $attendance_date);
+    }
 }

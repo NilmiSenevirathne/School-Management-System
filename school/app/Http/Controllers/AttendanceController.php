@@ -13,7 +13,7 @@ class AttendanceController extends Controller
 
         if(!empty($request->get('class_id')) && !empty($request->get('attendance_date'))){
 
-            $data['getStudent'] = User::getStudentClass($request->get('class_id'));
+            $data['getStudent'] = Student::getStudentClassA($request->get('class_id'));
         }
 
         $data['header_title'] = "Student Attendance";
