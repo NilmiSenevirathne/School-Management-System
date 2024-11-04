@@ -2,18 +2,17 @@
 
 @section('content')
 <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
     <section class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1>Assign Class Teacher (Total: {{ $getRecord->count() }})</h1>
-          </div>
-          <div class="col-sm-6 text-right">
-            <a href="{{ url('admin/assign_class_teacher/add') }}" class="btn btn-primary">Add New Assign Class Teacher</a>
-          </div>
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Assign Class Teacher (Total: {{ $getRecord->count() }})</h1>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="{{ url('admin/assign_class_teacher/add') }}" class="btn btn-primary">Add New Assign Class Teacher</a>
+                </div>
+            </div>
         </div>
-      </div>
     </section>
 
     <section class="content">
@@ -27,19 +26,16 @@
                     <form method="get" action="">
                         <div class="card-body">
                             <div class="row">
-                                <!-- Class Name -->
                                 <div class="form-group col-md-3">
                                     <label>Class Name</label>
                                     <input type="text" class="form-control" value="{{ Request::get('class_name') }}" name="class_name" placeholder="Enter class name">
                                 </div>
 
-                                <!-- Teacher Name -->
                                 <div class="form-group col-md-2">
                                     <label>Teacher Name</label>
                                     <input type="text" class="form-control" value="{{ Request::get('teacher_name') }}" name="teacher_name" placeholder="Enter teacher name">
                                 </div>
 
-                                <!-- Status -->
                                 <div class="form-group col-md-2">
                                     <label>Status</label>
                                     <select name="status" class="form-control">
@@ -47,12 +43,8 @@
                                         <option value="1" {{ Request::get('status') == '1' ? 'selected' : '' }}>Active</option>
                                         <option value="0" {{ Request::get('status') == '0' ? 'selected' : '' }}>Inactive</option>
                                     </select>
-
-                                   
-
                                 </div>
 
-                                <!-- Date -->
                                 <div class="form-group col-md-2">
                                     <label>Date</label>
                                     <input type="date" class="form-control" value="{{ Request::get('date') }}" name="date">
@@ -70,7 +62,6 @@
         </div>
     </section>
 
-    <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
             @include('_message')
@@ -79,7 +70,6 @@
                 <div class="card-header">
                     <h3 class="card-title">Assign Class Teacher List</h3>
                 </div>
-                <!-- /.card-header -->
                 <div class="card-body p-0">
                     <table class="table table-striped">
                         <thead>
@@ -93,41 +83,35 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
+                        
                         <tbody>
-                            @if($getRecord->isNotEmpty())
-                                @foreach ($getRecord as $value)
-                                    <tr>
-                                        <td>{{ $value->id }}</td>
-                                        <td>{{ $value->class->name ?? 'N/A' }}</td> <!-- Fetch class name -->
-                                        <td>{{ $value->teacher->name ?? 'N/A' }}</td> <!-- Fetch teacher name -->
-                                        <td>
-                                            {{ $value->status == 0 ? 'Active' : 'Inactive' }}
-                                        </td>
-                                        <td>{{ $value->user->name ?? 'N/A' }}</td> <!-- Fetch created by name -->
-                                        <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
-                                        <td>
-                                            <a href="{{ route('admin.assign_class_teacher.edit', $value->id) }}" class="btn btn-primary">Edit</a>
-                                            <a href="{{ route('admin.assign_class_teacher.edit_single', $value->id) }}" class="btn btn-warning">Edit Single</a>
-                                            
-                                            <form action="{{ route('admin.assign_class_teacher.delete', $value->id) }}" method="POST" style="display:inline;">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
-                                            </form>
-
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            @else
+                        @if($getRecord->isNotEmpty())
+                            @foreach ($getRecord as $value)
                                 <tr>
-                                    <td colspan="7" class="text-center">No records found</td>
+                                    <td>{{ $value->id }}</td>
+                                    <td>{{ $value->class_name ?? 'N/A' }}
+                                    <td>{{ $value->teacher_name ?? 'N/A' }}</td>
+                                    <td>{{ $value->status == 0 ? 'Active' : 'Inactive' }}</td>
+                                    <td>{{ $value->created_by_name ?? 'N/A' }}</td> 
+                                    <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.assign_class_teacher.edit', $value->id) }}" class="btn btn-primary">Edit</a>
+                                        <a href="{{ route('admin.assign_class_teacher.edit_single', $value->id) }}" class="btn btn-warning">Edit Single</a>
+                                        <form action="{{ route('admin.assign_class_teacher.delete', $value->id) }}" method="POST" style="display:inline;">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            @endif
+                            @endforeach
+                        @else
+                            <tr>
+                                <td colspan="7" class="text-center">No records found</td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
-                    <!-- Pagination -->
-                    
                 </div>
             </div>
         </div>

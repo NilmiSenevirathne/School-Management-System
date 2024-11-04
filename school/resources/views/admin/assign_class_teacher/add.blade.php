@@ -24,23 +24,24 @@
                         <!-- /.card-header -->
                         <!-- form start -->
                         <form method="POST" action="{{ route('admin.assign_class_teacher.insert') }}">
-                            {{ csrf_field() }}
+                        {{ csrf_field() }}
 
                             <!-- Display validation errors -->
                             @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
+                            <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                            </div>
                             @endif
+
 
                             <div class="card-body">
                                 <div class="form-group">
                                     <label>Class Name</label>
-                                    <select class="form-control" name="class_id" required>
+                                    <select class="form-control" name="class_id" id="class_id">
                                         <option value="">Select Class</option>
                                         @foreach ($getClass as $class)
                                             <option value="{{ $class->id }}">{{ $class->name }}</option>

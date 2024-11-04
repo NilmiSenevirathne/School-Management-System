@@ -60,15 +60,13 @@ class AssignClassTeacherModel extends Model
             $return = $return->whereDate('assign_class_teacher.created_at', '=', Request::get('date'));
         }
 
-        $return = $return->orderBy('assign_class_teacher.id', 'desc')
-            ->paginate(100);
-
-        return $return;
+        return $return->orderBy('assign_class_teacher.id', 'desc')
+                      ->paginate(100);
     }
 
     static public function getMyClassSubject($teacher_id)
     {
-        return AssignClassTeacherModel::select(
+        return self::select(
             'assign_class_teacher.*', 
             'class.name as class_name',
             'subject.name as subject_name',
