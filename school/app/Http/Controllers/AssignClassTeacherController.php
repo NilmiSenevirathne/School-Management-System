@@ -33,7 +33,7 @@ class AssignClassTeacherController extends Controller
         return view('admin.assign_class_teacher.add', $data);
     }
 
-
+    
     //insert new records 
     public function insert(Request $request)
     {
@@ -151,34 +151,39 @@ class AssignClassTeacherController extends Controller
         }
     }
 
+    //update the single record
     public function update_single(Request $request, $id)
-    {
-        // Find the existing assignment by ID
-        $existingAssignment = AssignClassTeacherModel::find($id);
-        
-        if (!$existingAssignment) {
-            return redirect()->back()->with('error', 'Record not found.');
-        }
-    
-        // Update the fields
-        $existingAssignment->class_id = $request->class_id; // Update class_id
-        $existingAssignment->teacher_id = $request->teacher_id; // Update teacher_id
-        $existingAssignment->status = $request->status; // Update status
-        $existingAssignment->updated_by = Auth::user()->id; // Set the user who updated
-        $existingAssignment->save(); 
-    
-        return redirect('admin/assign_class_teacher/list')->with('success', 'Assign To Class Teacher successfully updated!');
-    }
-    
+   {
+    // Validate the incoming request data
+    $request->validate([
+        'class_id' => 'required|integer',
+        'teacher_id' => 'required|integer',
+        'status' => 'required|boolean',
+    ]);
 
+    // Call the stored procedure with the necessary parameters
+    DB::statement('CALL update_single_assigned_class_teacher(?, ?, ?, ?, ?)', [
+        $id, // teacher_assign_id
+        $request->class_id, // class_id
+        $request->teacher_id, // teacher_id
+        $request->status, // status
+        Auth::user()->id // updated_by
+    ]);
+
+    return redirect('admin/assign_class_teacher/list')->with('success', 'Assign To Class Teacher successfully updated!');
+   }
+
+
+    
+    //delete the record 
     public function delete($id)
     {
-        $record = AssignClassTeacherModel::findOrFail($id);
-        $record->is_delete = 1; // Soft delete
-        $record->save();
+         // Call the stored procedure with the assigned class teacher ID
+         DB::statement('CALL delete_assigned_class_teacher(?)', [$id]);
 
-        return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
+         return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
     }
+
 
     // teacher side work
     public function myClassSubject()
