@@ -185,12 +185,27 @@ class AssignClassTeacherController extends Controller
     }
 
 
-    // teacher side work
+// teacher side work
     public function myClassSubject()
-{
-    $data['getRecord']= AssignClassTeacherModel::getMyClassSubject(Auth::user()->id);
-    $data['header_title'] = "My Class & Subject";
-    return view('teacher.my_class_subject', $data);
-}
+    {
+        // Get the logged-in teacher's email
+        $email = Auth::user()->email;
+
+        // Fetch the teacher record using the email
+        $teacher = DB::table('teacher')->where('email', $email)->first();
+
+        if (!$teacher) {
+            // Handle case where no teacher is found with that email
+            return redirect()->back()->with('error', 'Teacher not found');
+        }
+
+        // Execute the stored procedure and fetch records for the logged-in teacher by teacher ID
+        $data['getRecord'] = DB::select('CALL TeacherFetchMyClassAndSubject(?)', [$teacher->id]);
+        
+        $data['header_title'] = "My Class & Subject";
+        return view('teacher.my_class_subject', $data);
+    }
+
+
 
 }
