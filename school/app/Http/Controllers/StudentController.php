@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class StudentController extends Controller
 {
@@ -321,13 +322,25 @@ class StudentController extends Controller
         }
 
 
-        //teacher side work
-        public function MyStudent()
-        {
-            $data['getRecord'] = Student::getStudent();
-            $data['header_title'] ="My_Student List";
-            return view('admin.teacher.my_student',$data);
-        }
+     //teacher side work
+    public function MyStudent()
+    {
+    // Get the logged-in teacher's email
+    $email = Auth::user()->email;
+
+    // Fetch the teacher record using the email
+    $teacher = DB::table('teacher')->where('email', $email)->first();
+
+    if (!$teacher) {
+        // Handle case where no teacher is found with that email
+        return redirect()->back()->with('error', 'Teacher not found');
+    }
+
+    // Pass the teacher ID instead of the whole object
+    $data['getRecord'] = Student::getTeacherStudent($teacher->id); // Fix here
+    $data['header_title'] = "My Student List";
+    return view('admin.teacher.my_student', $data);
+    }
 
        
     }
