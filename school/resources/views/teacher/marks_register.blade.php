@@ -32,7 +32,7 @@
                                         <select class="form-control" name="exam_id" required>
                                             <option value="">Select</option>
                                             @foreach ($getExam as $exam)
-                                                <option {{ (Request::get('exam_id') == $exam->id) ? 'selected' : '' }} value="{{ $exam->id }}">{{ $exam->name }}</option>
+                                                <option {{ (Request::get('exam_id') == $exam->exam_id) ? 'selected' : '' }} value="{{ $exam->exam_id }}">{{ $exam->exam_name }}</option>
                                             @endforeach
                                         </select>
                                         
@@ -44,7 +44,7 @@
                                     <select class = "form-control"name ="class_id" required>
                                         <option value="">Select</option>
                                         @foreach ($getClass as $class )
-                                        <option {{ (Request::get('class_id')== $class->id) ? 'selected':'' }} value = "{{ $class->id }}">{{ $class->name }}</option>
+                                        <option {{ (Request::get('class_id')== $class->class_id) ? 'selected':'' }} value = "{{ $class->class_id }}">{{ $class->class_name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -123,7 +123,6 @@
                                     <input type="hidden" name="mark[{{ $i }}][full_marks]" value="{{ $subject->full_marks }}">
                                     <input type="hidden" name="mark[{{ $i }}][passing_marks]" value="{{ $subject->passing_marks }}">
 
-
                                     <input type="hidden" name="mark[{{ $i }}][id]" value="{{ $subject->id }}">
                                     <input type="hidden" name="mark[{{ $i }}][subject_id]" value="{{ $subject->subject_id }}">
                                     <input type="text" name = "mark[{{ $i }}][home_work]" id="home_work_{{ $student->id }}_{{ $subject->subject_id }}" style ="width:200px;" placeholder="Enter marks" value="{{ !empty($getMark->home_work) ? $getMark->home_work:'' }}" class = "form-control" >
@@ -193,7 +192,7 @@
     console.log($(this).serialize()); // Check serialized data
     $.ajax({
         type: "POST",
-        url: "{{ url('admin/examinations/submit_marks_register') }}",
+        url: "{{ url('teacher/submit_marks_register') }}",
         data: $(this).serialize(),
         dataType: "json",
         headers: {
@@ -265,7 +264,7 @@ $('.SaveSingleSubject').click(function(e){
 
     $.ajax({
         type: "POST",
-        url: "{{ url('admin/examinations/single_submit_marks_register') }}",
+        url: "{{ url('teacher/single_submit_marks_register') }}",
         data: {
             "_token": "{{ csrf_token() }}",
             id:id,

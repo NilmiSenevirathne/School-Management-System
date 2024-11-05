@@ -28,23 +28,7 @@ class AdminController extends Controller
         return view('admin.admin.add',$data);
     }
 
-    // public function insert(Request $request)
-    // {
-
-    //     request()->validate([
-    //         'email' => 'required|email|unique:users'
-    //     ]);
-
-    //    $user = new User;
-    //    $user->name = trim($request->name);
-    //    $user->email = trim($request->email);
-    //    $user->password = Hash::make($request->password);
-    //    $user->user_type = 1;
-
-    //    $user->save();
-       
-    //    return redirect ('admin/admin/list')->with('success','Admin added successfully');
-    // }
+    
 
     public function insert(Request $request)
     {
@@ -84,7 +68,7 @@ class AdminController extends Controller
     
         return redirect('admin/admin/list')->with('success', 'Admin added successfully');
     }
-    
+ 
 
     public function edit($id)
     {

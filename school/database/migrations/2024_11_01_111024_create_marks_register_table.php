@@ -19,9 +19,14 @@ return new class extends Migration
             $table->unsignedBigInteger('subject_id')->nullable(); 
             $table->tinyInteger('home_work')->default(0);    
             $table->tinyInteger('test_work')->default(0);
-            $table->tinyInteger('exam')->default(0);   
+            $table->tinyInteger('exam')->default(0); 
+            $table->string('total_marks')->default(0); 
+            $table->string('grade')->nullable();
+            $table->string('full_marks')->default(0); 
+            $table->string('passing_marks')->default(0);    
             $table->integer('created_by');
             $table->timestamps();
+            
         });
     }
 
