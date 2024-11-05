@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class ClassController extends Controller
@@ -24,17 +25,37 @@ class ClassController extends Controller
         return view ('admin.class.add',$data);
     }
 
+    // public function insert(Request $request)
+    // {
+    //     $save = new ClassModel;
+    //     $save->name = $request->name;
+    //     $save->status = $request->status;
+    //     $save->created_by = Auth::user()->id;
+    //     $save->save();
+
+    //     return redirect ('admin/class/list')->with('success','Class added successfully');
+
+    // }
+
     public function insert(Request $request)
     {
-        $save = new ClassModel;
-        $save->name = $request->name;
-        $save->status = $request->status;
-        $save->created_by = Auth::user()->id;
-        $save->save();
-
-        return redirect ('admin/class/list')->with('success','Class added successfully');
-
+        // Validate the request
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'status' => 'required|integer',
+        ]);
+    
+        // Call the stored procedure
+        DB::statement('CALL add_class(?, ?, ?)', [
+            $request->name,
+            $request->status,
+            Auth::user()->id,
+        ]);
+    
+        return redirect('admin/class/list')->with('success', 'Class added successfully');
     }
+    
+
 
     public function edit($id)
     {

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Models\MarksRegister;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Models\AssignClassTeacherModel;
 
 class ExaminationsController extends Controller
 {
@@ -188,6 +189,52 @@ public function marks_register(Request $request)
     return view('admin.examinations.marks_register',$data);
 }
 
+// public function marks_register_teacher(Request $request)
+// {
+//     $email = Auth::user()->email;
+
+//     $data['getClass'] = AssignClassTeacherModel::getMyClassSubjectGroup($email);
+//     $data['getExam'] = Exam::getExam();
+
+//     if(!empty($request->get('exam_id')) && !empty($request->get('class_id')))
+//     {
+//         $data['getSubject'] = ExamSchedule::getSubject($request->get('exam_id'),$request->get('class_id'));
+//         $data['getStudent'] = Student::getStudentClass($request->get('class_id'),$request->get('class_id'));
+
+        
+//     }
+
+//     $data['header_title'] ="Marks Register";
+//     return view('teacher.marks_register',$data);
+// }
+public function marks_register_teacher(Request $request)
+{
+    $email = Auth::user()->email;
+    
+    // Retrieve teacher data by email and get the teacher ID (assuming primary key 'id')
+    $teacher = \DB::table('teacher')->where('email', $email)->first();
+
+    if ($teacher) {
+        $teacher_id = $teacher->id;  // Change 'teacher_id' to 'id'
+
+        // Fetch the classes assigned to the teacher
+        $data['getClass'] = AssignClassTeacherModel::getMyClassSubjectGroup($teacher_id); 
+        $data['getExam'] = ExamSchedule::getExamTeacher($teacher_id);
+
+        if (!empty($request->get('exam_id')) && !empty($request->get('class_id'))) {
+            $data['getSubject'] = ExamSchedule::getSubject($request->get('exam_id'), $request->get('class_id'));
+            $data['getStudent'] = Student::getStudentClass($request->get('class_id'), $request->get('class_id'));
+        }
+
+        $data['header_title'] = "Marks Register";
+        return view('teacher.marks_register', $data);
+    }
+
+    return redirect()->back()->with('error', 'Teacher not found.');
+}
+
+
+
 public function submit_marks_register(Request $request)
 {
     
@@ -202,6 +249,10 @@ public function submit_marks_register(Request $request)
                 $home_work = !empty($mark['home_work']) ? $mark['home_work'] : 0;
                 $test_work = !empty($mark['test_work']) ? $mark['test_work'] : 0;
                 $exam = !empty($mark['exam']) ? $mark['exam'] : 0;
+
+                $full_marks = !empty($mark['full_marks']) ? $mark['full_marks'] : 0;
+                $passing_marks = !empty($mark['passing_marks']) ? $mark['passing_marks'] : 0;
+
 
                 $total_mark = $home_work + $test_work + $exam;
 
@@ -228,6 +279,10 @@ public function submit_marks_register(Request $request)
                 $save->home_work = $home_work;
                 $save->test_work = $test_work;
                 $save->exam = $exam;
+
+                $save->full_marks = $full_marks;
+                $save->passing_marks = $passing_marks;
+
                 
                 $save->save();
             }
@@ -260,6 +315,10 @@ public function single_submit_marks_register(Request $request)
     $test_work = !empty($request->test_work) ? $request->test_work: 0;
     $exam = !empty($request->exam) ? $request->exam: 0;
 
+  
+
+    
+
     $total_mark = $home_work + $test_work + $exam;
 
     if($full_marks >= $total_mark)
@@ -284,6 +343,10 @@ public function single_submit_marks_register(Request $request)
         $save->home_work = $home_work;
         $save->test_work = $test_work;
         $save->exam = $exam;
+
+        $save->full_marks = $getExamSchedule->full_marks;
+        $save->passing_marks = $getExamSchedule->passing_marks;
+
         
         $save->save();
     
@@ -339,5 +402,94 @@ public function MyExamTimetable(Request $request)
     }
 }
 
+// student side results
 
+
+// public function MyExamResult()
+// {
+//     $email = Auth::user()->email;
+//     $student = \DB::table('student')->where('email', $email)->first();
+
+//     if ($student) {
+//         $student_id = $student->id;
+//         $result = array();
+//         $getExam = MarksRegister::getExam($student_id);
+
+//         foreach ($getExam as $value) 
+//         {
+//             $dataE = array();
+//             $dataE['exam_name'] = $value->exam_name;
+//             $getExamSubject = MarksRegister::getExamSubject($value->exam_id, $student_id);
+
+//             $dataSubject = array();
+//             foreach ($getExamSubject as $exam)
+//             {
+//                 $total_score = $exam->home_work + $exam->test_work + $exam->exam;
+//                 $dataS = array();
+//                 $dataS['subject_name'] = $exam->subject_name;
+//                 $dataS['home_work'] = $exam->home_work;
+//                 $dataS['test_work'] = $exam->test_work;
+//                 $dataS['exam'] = $exam->exam;
+//                 $dataS['total_score'] = $total_score;
+//                 $dataS['full_marks'] = $exam->full_marks;
+//                 $dataS['passing_marks'] = $exam->passing_marks;
+//                 $dataSubject[] = $dataS;
+//             }
+//             $dataE['subject'] = $dataSubject;
+//             $result[] = $dataE;  // Append the whole exam data to result
+//         }
+        
+//         $data['getRecord'] = $result;  // Pass the result to view
+//         $data['header_title'] = "My Exam Result";
+//         return view('student.my_exam_result', $data);
+//     }
+
+//     // Handle the case where the student is not found, if necessary
+//     return redirect()->back()->with('error', 'Student not found.');
+// }
+public function MyExamResult()
+{
+    $email = Auth::user()->email;
+    $student = \DB::table('student')->where('email', $email)->first();
+
+    if ($student) {
+        $student_id = $student->id;
+        $result = array();
+        $getExam = MarksRegister::getExam($student_id);
+
+        foreach ($getExam as $value) 
+        {
+            $dataE = array();
+            $dataE['exam_name'] = $value->exam_name;
+            $getExamSubject = MarksRegister::getExamSubject($value->exam_id, $student_id);
+
+            $dataSubject = array();
+            foreach ($getExamSubject as $exam)
+            {
+                $dataS = array();
+                $dataS['subject_name'] = $exam->subject_name;
+                $dataS['home_work'] = $exam->home_work;
+                $dataS['test_work'] = $exam->test_work;
+                $dataS['exam'] = $exam->exam;
+                $dataS['total_marks'] = $exam->total_marks;  // Retrieve total_marks directly from the table
+                $dataS['grade'] = $exam->grade;
+                $dataS['full_marks'] = $exam->full_marks;
+                $dataS['passing_marks'] = $exam->passing_marks;
+                $dataSubject[] = $dataS;
+            }
+            $dataE['subject'] = $dataSubject;
+            $result[] = $dataE;
+        }
+
+        $data['getRecord'] = $result;
+        $data['header_title'] = "My Exam Result";
+        return view('student.my_exam_result', $data);
+    }
+
+    return redirect()->back()->with('error', 'Student not found.');
+}
+
+    
+
+   
 }
