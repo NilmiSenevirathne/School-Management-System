@@ -85,4 +85,36 @@ class AssignClassTeacherModel extends Model
     {
         return self::where('class_id', '=', $class_id)->delete();
     }
+
+    // static public function getMyClassSubjectGroup($teacher_id)
+    // {
+    //     return AssignClassTeacherModel::select(
+    //         'assign_class_teacher.*', 
+    //         'class.name as class_name',
+    //         'class.id as class_id',
+           
+    //     )
+    //     ->join('class', 'class.id', '=', 'assign_class_teacher.class_id')
+    //     ->where('assign_class_teacher.is_delete', '=', 0)
+    //     ->where('assign_class_teacher.status', '=', 0)
+    //     ->where('assign_class_teacher.teacher_id','=',$teacher_id)
+    //     ->groupBy('assign_class_teacher.class_id')
+    //     ->get();
+    // }
+
+    public static function getMyClassSubjectGroup($teacher_id)
+{
+    return self::select(
+            'assign_class_teacher.*', 
+            'class.name as class_name',
+            'class.id as class_id'
+        )
+        ->join('class', 'class.id', '=', 'assign_class_teacher.class_id')
+        ->where('assign_class_teacher.is_delete', '=', 0)
+        ->where('assign_class_teacher.status', '=', 0)
+        ->where('assign_class_teacher.teacher_id', '=', $teacher_id)
+        ->groupBy('assign_class_teacher.class_id')
+        ->get();
+}
+
 }

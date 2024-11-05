@@ -259,6 +259,7 @@
                                 <p>Marks Register</p>
                                 </a>
                             </li>
+                           
                             </ul>
                         </li>
 
@@ -329,6 +330,16 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ url('teacher/marks_register') }}"
+                            class="nav-link  @if (Request::segment(2) == 'marks_register') active @endif">
+                            <i class="nav-icon far fa-user"></i>                          
+                            <p>
+                                Marks Register
+                            </p>
+                        </a>
+                    </li>
+                  
+                    <li class="nav-item">
                         <a href="{{ url('teacher/account') }}"
                             class="nav-link @if (Request::segment(2) == 'account') active @endif">
                             <i class="nav-icon far fa-user"></i>
@@ -382,6 +393,15 @@
                             <i class="nav-icon fas fa-clock"></i>
                             <p>
                                 My Exam Timetable
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ url('student/my_exam_result') }}"
+                            class="nav-link @if (Request::segment(2) == 'my_exam_result') active @endif">
+                            <i class="nav-icon fas fa-certificate"></i>
+                            <p>
+                               My Exam Results
                             </p>
                         </a>
                     </li>
