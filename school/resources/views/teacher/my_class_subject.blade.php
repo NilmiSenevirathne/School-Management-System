@@ -39,10 +39,10 @@
                 @else
                   @foreach ($getRecord as $value)
                     <tr>
-                      <td>{{ $value['class_name'] }}</td>
-                      <td>{{ $value['subject_name'] }}</td>
-                      <td>{{ $value['subject_type'] }}</td>
-                      <td>{{ date('d-m-Y H:i A', strtotime($value['created_at'])) }}</td>
+                      <td>{{ $value->class_name }}</td>
+                      <td>{{ $value->subject_name }}</td>
+                      <td>{{ $value->subject_type }}</td>
+                      <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
                     </tr>
                   @endforeach
                 @endif
