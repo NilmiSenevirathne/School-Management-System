@@ -198,9 +198,9 @@ class Student extends Model
             ->distinct()
             ->orderBy('id', 'desc')
             ->paginate(20); // Paginate results
-    }
+    
 
-   {
+   
     return self::select('student.*', 'class.name as class_name')
         ->leftJoin('class', 'class.id', '=', 'student.class_id')
         ->leftJoin('assign_class_teacher', 'assign_class_teacher.class_id', '=', 'class.id')
@@ -215,4 +215,4 @@ class Student extends Model
 
     
 
-}
+    }
