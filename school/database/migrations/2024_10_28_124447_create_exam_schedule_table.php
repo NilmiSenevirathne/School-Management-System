@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('exam_schedule', function (Blueprint $table) {
             $table->id();
-            $table->integer('exam_id')->nullable(); 
-            $table->integer('class_id')->nullable(); 
-            $table->integer('subject_id')->nullable(); 
+            $table->unsignedBigInteger('exam_id')->nullable(); 
+            $table->unsignedBigInteger('class_id')->nullable(); 
+            $table->unsignedBigInteger('subject_id')->nullable(); 
             $table->date('exam_date')->nullable();
             $table->string('start_time')->nullable();
             $table->string('end_time')->nullable();
@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string('passing_marks')->nullable(); 
             $table->integer('created_by');
             $table->timestamps();
+
+            $table->foreign('class_id')->references('id')->on('class')->onDelete('cascade');
+            $table->foreign('subject_id')->references('id')->on('subject')->onDelete('cascade');
+            $table->foreign('exam_id')->references('id')->on('exam')->onDelete('cascade');
+
         });
     }
 

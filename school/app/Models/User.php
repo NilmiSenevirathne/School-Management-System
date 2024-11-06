@@ -81,5 +81,13 @@ class User extends Authenticatable
         return User::where('email', '=',$email)->first();
     }
 
+    // static public function getTotalUser($user_type)
+    // {
+    //     return self::select('users.id')
+    //     ->where('user_type','=',$user_type)
+    //     ->where('is_delete','=',0)
+    //     ->count();
+    // }
+
    
 }

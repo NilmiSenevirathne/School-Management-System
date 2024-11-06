@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('student', function (Blueprint $table) {
             $table->id();
-            $table->integer('parent_id')->nullable();
+            $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('admission_number')->nullable();
             $table->string('roll_number')->nullable();
             $table->string('class_id')->nullable();
@@ -31,6 +31,9 @@ return new class extends Migration
             $table->tinyInteger('user_type')->default(3)->comment('3:student')->nullable();
             $table->tinyInteger('is_delete')->default(0)->comment('0:not deleted, 1:deleted')->nullable(); // is_delete field
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('parent')->onDelete('cascade');
+
         });
     }
 

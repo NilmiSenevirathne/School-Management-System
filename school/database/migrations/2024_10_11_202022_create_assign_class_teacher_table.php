@@ -21,6 +21,10 @@ return new class extends Migration
             $table->timestamps(); // Created_at and updated_at timestamps
             $table->tinyInteger('is_delete')->default(0)->comment('0:not deleted, 1:deleted')->nullable(); // is_delete field
 
+            $table->foreign('class_id')->references('id')->on('class')->onDelete('cascade');
+            $table->foreign('teacher_id')->references('id')->on('teacher')->onDelete('cascade');
+            
+
            
         });
     }

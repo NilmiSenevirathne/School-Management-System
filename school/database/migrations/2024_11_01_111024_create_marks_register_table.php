@@ -26,6 +26,12 @@ return new class extends Migration
             $table->string('passing_marks')->default(0);    
             $table->integer('created_by');
             $table->timestamps();
+
+            $table->foreign('class_id')->references('id')->on('class')->onDelete('cascade');
+            $table->foreign('subject_id')->references('id')->on('subject')->onDelete('cascade');
+            $table->foreign('exam_id')->references('id')->on('exam')->onDelete('cascade');
+            $table->foreign('student_id')->references('id')->on('student')->onDelete('cascade');
+
             
         });
     }
