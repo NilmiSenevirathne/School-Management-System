@@ -14,6 +14,8 @@ class CreateGetTeacherStudentCountFunction extends Migration
      */
     public function up()
     {
+        DB::unprepared('DROP FUNCTION IF EXISTS getTeacherStudentCount');
+
         DB::unprepared('
             CREATE FUNCTION getTeacherStudentCount(teacher_id INT) 
             RETURNS INT DETERMINISTIC

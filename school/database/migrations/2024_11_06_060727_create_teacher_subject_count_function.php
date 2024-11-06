@@ -12,6 +12,8 @@ class CreateTeacherSubjectCountFunction extends Migration
      */
     public function up()
     {
+        DB::unprepared('DROP FUNCTION IF EXISTS getTeacherSubjectCount');
+
         DB::unprepared('
             CREATE FUNCTION getTeacherSubjectCount(teacher_id INT) 
             RETURNS INT DETERMINISTIC
