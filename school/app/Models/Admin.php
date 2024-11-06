@@ -64,4 +64,13 @@ public static function getAdminAccount($email)
     return self::where('email', $email)->first();
 }
 
+public function getAdminProfile()
+{
+    if (! empty($this->profile_picture) && file_exists('uploads/admin/'.$this->profile_picture)) {
+        return url('uploads/admin/'.$this->profile_picture);
+    } else {
+        return '';
+    }
+}
+
 }

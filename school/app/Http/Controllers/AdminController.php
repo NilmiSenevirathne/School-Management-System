@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Admin;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -50,6 +51,19 @@ class AdminController extends Controller
         $admin->email = trim($request->email);
         $admin->password = Hash::make($request->password);
         $admin->user_type = 1; // Admin user type
+
+      
+        if(!empty($request->file('profile_picture')))
+        {
+            $ext = $request->file('profile_picture')->getClientOriginalExtension();
+            $file = $request->file('profile_picture');
+            $randomStr = Str::random(20);
+            $filename = strtolower($randomStr).'.'.$ext;
+            $file->move('uploads/admin/', $filename);
+
+            $admin->profile_picture = $filename;
+
+        }
         $admin->save();
     
         // Validate email for the user table
@@ -94,7 +108,7 @@ class AdminController extends Controller
             'last_name' => 'required|string|max:255',
             'address' => 'required|string|max:255',
             'contact' => 'required|numeric|digits_between:10,15',
-            'email' => 'required|email|unique:users,email,' . $id . ',id|unique:admin,email,' . $id . ',id',
+           // 'email' => 'required|email|unique:users,email,' . $id . ',id|unique:admin,email,' . $id . ',id',
         ]);
        
 
@@ -107,6 +121,23 @@ class AdminController extends Controller
         if (!empty($request->password)) {
             $admin->password = Hash::make($request->password);
         }
+
+        if(!empty($request->file('profile_picture')))
+        {
+            if(!empty($admin->getAdminProfile()))
+            {
+              unlink('uploads/admin/'.$admin->profile_picture); // Delete the old profile picture
+            }
+            $ext = $request->file('profile_picture')->getClientOriginalExtension();
+            $file = $request->file('profile_picture');
+            $randomStr = Str::random(20);
+            $filename = strtolower($randomStr).'.'.$ext;
+            $file->move('uploads/admin/', $filename);
+
+            $admin->profile_picture = $filename;
+
+        }
+
         $admin->save();
 
         // Find the corresponding User record based on the email

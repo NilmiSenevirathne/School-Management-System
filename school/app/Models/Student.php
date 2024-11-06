@@ -199,6 +199,8 @@ class Student extends Model
         ->orderBy('student.id', 'desc')
         ->paginate(20); // Paginate results
    }
+
+
     
 
 }

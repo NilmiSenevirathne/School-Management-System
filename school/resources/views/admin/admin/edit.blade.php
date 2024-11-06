@@ -27,7 +27,7 @@
              
               <!-- /.card-header -->
               <!-- form start -->
-              <form method="POST" action ="">
+              <form method="POST" action =""enctype="multipart/form-data">
                 {{ csrf_field() }}
                 <div class="card-body">
                     <div class="form-group">
@@ -60,6 +60,16 @@
                     <label >Password</label>
                     <input type="text" class="form-control" name ="password"   placeholder="Password">
                     <p>Do you want change password , Please add new password</p>
+                  </div>
+
+                  <div class="form-group">
+                    <label >Profile</label>
+                    <input type="file" class="form-control"  name ="profile_picture" >
+                    <div style ="color:red"> {{ $errors->first('profile_picture') }}</div>
+                    @if(!empty($getRecord->getAdminProfile()))
+                    <img src = "{{ $getRecord->getAdminProfile() }}" style = "width:100px;">
+                    @endif
+
                   </div>
                  
                 </div>
