@@ -43,7 +43,7 @@
                 <table class="table table-striped">
                   <thead>
                     <tr>
-                      <th>Profile</th>
+                       
                       <th>Student Name</th>
                       <th>Email</th>
                       <th>Address</th>
@@ -60,11 +60,7 @@
                   <tbody>
                   @foreach($getRecord as $value)
                   <tr>
-                    <td>
-                      @if(!empty($value->getStudentProfile()))
-                      <img src = "{{ $value->getStudentProfile() }}" style = "height:50px; width:50px; border-radius:50px;">
-                      @endif
-                      </td>
+                    
                     <td>{{ $value->name }} {{ $value->last_name }}</td>
                     <td>{{ $value->email }}</td>
                     <td>{{ $value->address }}</td>

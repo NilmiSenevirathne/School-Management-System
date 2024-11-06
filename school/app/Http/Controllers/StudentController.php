@@ -322,25 +322,35 @@ class StudentController extends Controller
         }
 
 
-     //teacher side work
-    public function MyStudent()
-    {
-    // Get the logged-in teacher's email
-    $email = Auth::user()->email;
 
-    // Fetch the teacher record using the email
-    $teacher = DB::table('teacher')->where('email', $email)->first();
 
-    if (!$teacher) {
-        // Handle case where no teacher is found with that email
-        return redirect()->back()->with('error', 'Teacher not found');
-    }
+   // display the teacher's students
+   public function MyStudent()
+   {
+       // Get the logged-in teacher's email
+       $email = Auth::user()->email;
+   
+       // Fetch the teacher record using the email
+       $teacher = DB::table('teacher')->where('email', $email)->first();
+   
+       if (!$teacher) {
+           // Handle case where no teacher is found with that email
+           return redirect()->back()->with('error', 'Teacher not found');
+       }
+   
+       // Fetch students associated with the teacher
+       $data['getRecord'] = Student::getTeacherStudent($teacher->id); // Use teacher ID
+       $data['header_title'] = "My Student List";
+       
+       return view('admin.teacher.my_student', $data);
+   }
 
     // Pass the teacher ID instead of the whole object
     $data['getRecord'] = Student::getTeacherStudent($teacher->id);
     $data['header_title'] = "My Student List";
     return view('admin.teacher.my_student', $data);
     }
+
 
        
     }

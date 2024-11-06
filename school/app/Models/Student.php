@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\DB;
 
 class Student extends Model
 {
@@ -187,8 +188,18 @@ class Student extends Model
         return StudentAttendanceModel::CheckAlreadyAttendance($student_id, $class_id, $attendance_date);
     }
 
+
     // Teacher-side method to fetch students linked to the teacher’s class
     public static function getTeacherStudent($teacher_id)
+
+    {
+        return DB::table('teacher_fetch_mystudent_view')
+            ->where('teacher_id', '=', $teacher_id)  // Now directly filter by teacher_id
+            ->distinct()
+            ->orderBy('id', 'desc')
+            ->paginate(20); // Paginate results
+    }
+
    {
     return self::select('student.*', 'class.name as class_name')
         ->leftJoin('class', 'class.id', '=', 'student.class_id')
@@ -199,6 +210,7 @@ class Student extends Model
         ->orderBy('student.id', 'desc')
         ->paginate(20); // Paginate results
    }
+
 
 
     
