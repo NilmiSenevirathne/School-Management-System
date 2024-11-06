@@ -13,6 +13,8 @@ class CreateStudentExamResultsView extends Migration
      */
     public function up()
     {
+        DB::statement('DROP VIEW IF EXISTS student_exam_results');
+
         DB::statement('
             CREATE VIEW student_exam_results AS
             SELECT 

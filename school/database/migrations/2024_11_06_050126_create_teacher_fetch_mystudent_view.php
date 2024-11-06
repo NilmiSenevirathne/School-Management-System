@@ -12,6 +12,7 @@ class CreateTeacherFetchMyStudentView extends Migration
      */
     public function up(): void
     {
+        DB::statement('DROP VIEW IF EXISTS teacher_fetch_mystudent_view');
         DB::statement('
             CREATE VIEW teacher_fetch_mystudent_view AS
             SELECT
