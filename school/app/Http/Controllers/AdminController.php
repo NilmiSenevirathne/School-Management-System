@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Admin;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -31,57 +32,44 @@ class AdminController extends Controller
 
     
 
-    public function insert(Request $request)
-    {
-        // Validate email for the admin table
-        request()->validate([
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'contact' => 'required|numeric|digits_between:10,15',
-            'email' => 'required|email|unique:admin'
-        ]);
+    // public function insert(Request $request)
+    // {
+    //     $request->validate([
+    //         'name' => 'required|string|max:255',
+    //         'last_name' => 'required|string|max:255',
+    //         'address' => 'required|string|max:255',
+    //         'contact' => 'required|numeric|digits_between:10,15',
+    //         'email' => 'required|email|unique:admin|unique:users',
+    //         'password' => 'required|string|min:6',
+    //         'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' // Profile picture validation
+    //     ]);
     
-        // Create and save the Admin
-        $admin = new Admin;
-        $admin->name = trim($request->name);
-        $admin->last_name = trim($request->last_name);
-        $admin->address = trim($request->address);
-        $admin->contact = trim($request->contact);
-        $admin->email = trim($request->email);
-        $admin->password = Hash::make($request->password);
-        $admin->user_type = 1; // Admin user type
-
-      
-        if(!empty($request->file('profile_picture')))
-        {
-            $ext = $request->file('profile_picture')->getClientOriginalExtension();
-            $file = $request->file('profile_picture');
-            $randomStr = Str::random(20);
-            $filename = strtolower($randomStr).'.'.$ext;
-            $file->move('uploads/admin/', $filename);
-
-            $admin->profile_picture = $filename;
-
-        }
-        $admin->save();
+    //     // Handle profile picture upload
+    //     $profilePictureName = null;
+    //     if ($request->hasFile('profile_picture')) {
+    //         $file = $request->file('profile_picture');
+    //         $extension = $file->getClientOriginalExtension();
+    //         $profilePictureName = Str::random(20) . '.' . $extension;
+    //         $file->move(public_path('uploads/admin'), $profilePictureName);
+    //     }
     
-        // Validate email for the user table
-        request()->validate([
-            'email' => 'required|email|unique:users'
-        ]);
+    //     $passwordHash = Hash::make($request->password);
     
-        // Create and save the corresponding User
-        $user = new User;
-        $user->name = trim($request->name);
-        $user->last_name = trim($request->last_name);
-        $user->email = trim($request->email);
-        $user->password = Hash::make($request->password);
-        $user->user_type = 1; // Admin user type for user table
-        $user->save();
+    //     // Execute the stored procedure
+    //     DB::statement('CALL InsertAdminAndUser(?, ?, ?, ?, ?, ?, ?, ?)', [
+    //         $request->name,
+    //         $request->last_name,
+    //         $request->address,
+    //         $request->contact,
+    //         $request->email,
+    //         $passwordHash,
+    //         1, // Admin user type
+    //         $profilePictureName
+    //     ]);
     
-        return redirect('admin/admin/list')->with('success', 'Admin added successfully');
-    }
+    //     return redirect('admin/admin/list')->with('success', 'Admin added successfully');
+    // }
+    
  
 
     public function edit($id)
