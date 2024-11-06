@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +22,19 @@ class DashboardController extends Controller
             return view('admin.dashboard', $data);
         }
         else if(Auth::user()->user_type == 2){
+
+            $email = Auth::user()->email;
+            $teacher = DB::table('teacher')->where('email', $email)->first();
+    
+            if (!$teacher) {
+                return redirect()->back()->with('error', 'Teacher not found');
+            }
+    
+            $data['TotalStudent'] = DB::select('SELECT getTeacherStudentCount(?) AS count', [$teacher->id])[0]->count;
+            $data['TotalSubject'] = DB::select('SELECT getTeacherSubjectCount(?) AS count', [$teacher->id])[0]->count;
+            $data['TotalClass'] = DB::select('SELECT getTeacherClassCount(?) AS count', [$teacher->id])[0]->count;
+
+             
             return view('teacher.dashboard',$data);
         }
         else if(Auth::user()->user_type == 3){

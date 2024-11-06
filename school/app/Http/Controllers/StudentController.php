@@ -337,7 +337,7 @@ class StudentController extends Controller
     }
 
     // Pass the teacher ID instead of the whole object
-    $data['getRecord'] = Student::getTeacherStudent($teacher->id); // Fix here
+    $data['getRecord'] = Student::getTeacherStudent($teacher->id);
     $data['header_title'] = "My Student List";
     return view('admin.teacher.my_student', $data);
     }
