@@ -12,6 +12,8 @@ class CreateExamSubjectView extends Migration
      */
     public function up()
     {
+        DB::statement('DROP VIEW IF EXISTS exam_subject_view');
+
         DB::statement('
             CREATE VIEW exam_subject_view AS
             SELECT 

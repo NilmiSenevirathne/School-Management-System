@@ -12,6 +12,8 @@ class CreateUserCountFunction extends Migration
      */
     public function up()
     {
+        DB::unprepared('DROP FUNCTION IF EXISTS getUserCount');
+
         DB::unprepared('
             CREATE FUNCTION getUserCount(userType INT) 
             RETURNS INT
