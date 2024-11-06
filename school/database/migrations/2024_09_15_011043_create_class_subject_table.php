@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('class_subject', function (Blueprint $table) {
             $table->id();
-            $table->integer('class_id')->nullable(); 
-            $table->integer('subject_id')->nullable(); 
+            $table->unsignedBigInteger('class_id')->nullable(); 
+            $table->unsignedBigInteger('subject_id')->nullable(); 
             $table->integer('created_by');
             $table->tinyInteger('is_delete')->default(0)->comment('0:not deleted, 1:deleted'); // is_delete field      
             $table->tinyInteger('status')->default(0)->comment('0: active, 1: inactive');   
             $table->timestamps();
+
+            $table->foreign('class_id')->references('id')->on('class')->onDelete('cascade');
+            $table->foreign('subject_id')->references('id')->on('subject')->onDelete('cascade');
         });
     }
 

@@ -4,25 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\ClassModel;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ClassController extends Controller
 {
-    
-
     public function list()
     {
         $data['getRecord'] = ClassModel::getRecord();
 
         $data['header_title'] = 'Class List';
-        return view ('admin.class.list',$data);
+
+        return view('admin.class.list', $data);
     }
 
     public function add()
     {
         $data['header_title'] = 'Add New Class';
-        return view ('admin.class.add',$data);
+
+        return view('admin.class.add', $data);
     }
 
     // public function insert(Request $request)
@@ -44,53 +44,45 @@ class ClassController extends Controller
             'name' => 'required|string|max:255',
             'status' => 'required|integer',
         ]);
-    
+
         // Call the stored procedure
         DB::statement('CALL add_class(?, ?, ?)', [
             $request->name,
             $request->status,
             Auth::user()->id,
         ]);
-    
+
         return redirect('admin/class/list')->with('success', 'Class added successfully');
     }
-    
-
 
     public function edit($id)
     {
         $data['getRecord'] = ClassModel::getSingle($id);
-        if(!empty($data['getRecord']))
-        {
+        if (! empty($data['getRecord'])) {
 
             $data['header_title'] = 'Edit Class';
-            return view ('admin.class.edit',$data);
-        }
-        else{
+
+            return view('admin.class.edit', $data);
+        } else {
             abort(404);
         }
-   
     }
 
-    public function update(Request $request, $id) 
+    public function update(Request $request, $id)
     {
-        $save= ClassModel::getSingle($id);
-        $save->name = $request->name;
-        $save->status = $request->status;
-        $save->save();
+        DB::statement('CALL UpdateClass(?, ?, ?)', [
+            $id,
+            $request->name,
+            $request->status,
+        ]);
 
-        return redirect ('admin/class/list')->with('success','Class updated successfully');
-
-   
+        return redirect('admin/class/list')->with('success', 'Class updated successfully');
     }
 
     public function delete($id)
     {
-        $save= ClassModel::getSingle($id);
-        $save->is_delete = 1;
-        $save->save(); 
+        DB::statement('CALL DeleteClass(?)', [$id]);
 
-        return redirect()->back()->with('success','Class deleted successfully');
-
+        return redirect()->back()->with('success', 'Class deleted successfully');
     }
 }

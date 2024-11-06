@@ -131,11 +131,11 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                <img src="{{ asset('/dist/img/user2-160x160.jpg') }}" class="img-circle elevation-2"
+                <img src="{{ asset('uploads/admin/log.jpg') }}" class="img-circle elevation-2"
                     alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">{{ Auth::user()->name }}</a>
+                <a href="#" class="d-block">{{ Auth::user()->name }} {{ Auth::user()->last_name }}</a>
             </div>
         </div>
         <!-- Sidebar Menu -->
@@ -263,25 +263,34 @@
                             </ul>
                         </li>
 
-                    <li class="nav-item @if(Request::segment(2) == 'attendance') menu-is-opening menu-open @endif">
-                        <a href="#"
-                            class="nav-link @if (Request::segment(2) == 'attendance') active @endif">
-                            <i class="nav-icon fas fa-table"></i>
-                            <p>
-                                Attendance
-                                <i class="fas fa-angle-left right"></i>
-                            </p>
-                        </a>
-                        <ul class="nav nav-treeview">
-                            <li class="nav-item">
-                            <a href="{{ url('admin/attendance/student') }}"
-                            class="nav-link @if (Request::segment(3) == 'student') active @endif">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Student Attendance</p>
+<!--Attendance-->                    
+                        <li class="nav-item @if(Request::segment(2) == 'attendance') menu-is-opening menu-open @endif">
+                            <a href="#"
+                                class="nav-link @if (Request::segment(2) == 'attendance') active @endif">
+                                <i class="nav-icon fas fa-table"></i>
+                                <p>
+                                    Attendance
+                                    <i class="fas fa-angle-left right"></i>
+                                </p>
                             </a>
-                            </li>
-                        </ul>
-                    </li>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/attendance/student') }}"
+                                    class="nav-link @if (Request::segment(3) == 'student') active @endif">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Student Attendance</p>
+                                    </a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href="{{ url('admin/attendance/report') }}"
+                                    class="nav-link @if (Request::segment(3) == 'report') active @endif">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Attendance Report</p>
+                                    </a>
+                                </li>
+                            </ul>
+                         </li>
 
                     <li class="nav-item">
                         <a href="{{ url('admin/account') }}"

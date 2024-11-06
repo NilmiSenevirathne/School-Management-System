@@ -84,6 +84,7 @@
                   <thead>
                     <tr>
                       <th>#</th>
+                      <th>Profile</th>
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Address</th>
@@ -97,6 +98,11 @@
                   @foreach($getRecord as $value)
                   <tr>
                     <td>{{ $value->id }}</td>
+                    <td>
+                      @if(!empty($value->getAdminProfile()))
+                      <img src = "{{ $value->getAdminProfile() }}" style = "height:50px; width:50px; border-radius:50px;">
+                      @endif
+                      </td>
                     <td>{{ $value->name }}</td>
                     <td>{{ $value->last_name }}</td>
                     <td>{{ $value->address }}</td>

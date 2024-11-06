@@ -191,6 +191,7 @@ class Student extends Model
 
     // Teacher-side method to fetch students linked to the teacher’s class
     public static function getTeacherStudent($teacher_id)
+
     {
         return DB::table('teacher_fetch_mystudent_view')
             ->where('teacher_id', '=', $teacher_id)  // Now directly filter by teacher_id
@@ -198,6 +199,20 @@ class Student extends Model
             ->orderBy('id', 'desc')
             ->paginate(20); // Paginate results
     }
+
+   {
+    return self::select('student.*', 'class.name as class_name')
+        ->leftJoin('class', 'class.id', '=', 'student.class_id')
+        ->leftJoin('assign_class_teacher', 'assign_class_teacher.class_id', '=', 'class.id')
+        ->where('assign_class_teacher.teacher_id', '=', $teacher_id)
+        ->where('student.is_delete', '=', 0) // Ensure you're only getting non-deleted students
+        ->distinct()
+        ->orderBy('student.id', 'desc')
+        ->paginate(20); // Paginate results
+   }
+
+
+
     
 
 }
