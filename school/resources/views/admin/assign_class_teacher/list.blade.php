@@ -15,7 +15,7 @@
         </div>
     </section>
 
-    <section class="content">
+    <!-- <section class="content">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
 
     <section class="content">
         <div class="container-fluid">
@@ -95,7 +95,7 @@
                                     <td>{{ $value->created_by_name ?? 'N/A' }}</td> 
                                     <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
                                     <td>
-                                        <a href="{{ route('admin.assign_class_teacher.edit', $value->id) }}" class="btn btn-primary">Edit</a>
+                                        <!-- <a href="{{ route('admin.assign_class_teacher.edit', $value->id) }}" class="btn btn-primary">Edit</a> -->
                                         <a href="{{ route('admin.assign_class_teacher.edit_single', $value->id) }}" class="btn btn-warning">Edit Single</a>
                                         <form action="{{ route('admin.assign_class_teacher.delete', $value->id) }}" method="POST" style="display:inline;">
                                             @csrf
