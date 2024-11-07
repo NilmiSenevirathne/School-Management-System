@@ -483,4 +483,41 @@ class ExaminationsController extends Controller
 
         return redirect()->back()->with('error', 'Student not found.');
     }
+
+    public function MyExamResultParent($student_id)
+    {
+       
+            $result = [];
+            $getExam = MarksRegister::getExam($student_id);
+
+            foreach ($getExam as $value) {
+                $dataE = [];
+                $dataE['exam_name'] = $value->exam_name;
+                $getExamSubject = MarksRegister::getExamSubject($value->exam_id, $student_id);
+
+                $dataSubject = [];
+                foreach ($getExamSubject as $exam) {
+                    $dataS = [];
+                    $dataS['subject_name'] = $exam->subject_name;
+                    $dataS['home_work'] = $exam->home_work;
+                    $dataS['test_work'] = $exam->test_work;
+                    $dataS['exam'] = $exam->exam;
+                    $dataS['total_marks'] = $exam->total_marks;  // Retrieve total_marks directly from the table
+                    $dataS['grade'] = $exam->grade;
+                    $dataS['full_marks'] = $exam->full_marks;
+                    $dataS['passing_marks'] = $exam->passing_marks;
+                    $dataSubject[] = $dataS;
+                }
+                $dataE['subject'] = $dataSubject;
+                $result[] = $dataE;
+            }
+
+            $data['getRecord'] = $result;
+            $data['header_title'] = 'My Exam Result';
+
+            return view('parent.my_exam_result', $data);
+        
+
+        return redirect()->back()->with('error', 'Student not found.');   
+    }
 }

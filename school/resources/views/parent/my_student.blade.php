@@ -58,6 +58,9 @@
                                         <td>
                                             <a class="btn btn-primary btn-sm"
                                                 href="{{ url('parent/my_student/subject/' . $value->id) }}">Subject</a>
+                                       
+                                            <a class="btn btn-primary btn-sm"
+                                                href="{{ url('parent/my_student/exam_result/' . $value->id) }}">Exam Result</a>
                                         </td>
                                         {{-- 
                         <td style ="min-width:150px;">

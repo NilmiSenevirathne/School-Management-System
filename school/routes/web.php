@@ -238,5 +238,7 @@ Route::group(['middleware' => 'parent'], function () {
     Route::get('parent/my_student/subject/{student_id}', [SubjectController::class, 'ParentStudentSubject']);
 
     Route::get('parent/my_student', [ParentController::class, 'myStudentParent']);
+    Route::get('parent/my_student/exam_result/{student_id}', [ExaminationsController::class, 'MyExamResultParent']);
+
 
 });
