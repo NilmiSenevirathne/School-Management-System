@@ -179,7 +179,8 @@ class AssignClassTeacherController extends Controller
     public function delete($id)
     {
          // Call the stored procedure with the assigned class teacher ID
-         DB::statement('CALL delete_assigned_class_teacher(?)', [$id]);
+
+         DB::statement('CALL delete_newassign_class(?)', [$id]);
 
          return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
     }
