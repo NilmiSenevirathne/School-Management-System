@@ -195,6 +195,8 @@ Route::group(['middleware' => 'teacher'], function () {
     Route::get('teacher/my_student', [StudentController::class, 'MyStudent'])->middleware('auth')->name('teacher.my_student');
 
     Route::get('teacher/my_class_subject', [AssignClassTeacherController::class, 'MyClassSubject']);
+    Route::get('teacher/my_class_subject/class_timetable/{id}', [ClassTimetableController::class, 'MyTimetableTeacher']);
+
 
     Route::get('teacher/marks_register', [ExaminationsController::class, 'marks_register_teacher']);
     Route::post('teacher/submit_marks_register', [ExaminationsController::class, 'submit_marks_register']);

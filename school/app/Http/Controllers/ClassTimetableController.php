@@ -153,6 +153,7 @@ class ClassTimetableController extends Controller
 //     return view('student.my_timetable', $data);
 // }
 
+//student side
 public function MyTimetable(Request $request)
 {
     // Get the logged-in student's email
@@ -203,5 +204,11 @@ public function MyTimetable(Request $request)
     return view('student.my_timetable', $data);
 }
 
+//teacher side
+public function MyTimetableTeacher($id)
+{
+   dd($id);
+
+}
 
 }
