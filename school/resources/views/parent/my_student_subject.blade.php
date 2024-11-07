@@ -27,7 +27,7 @@
                                 <tr>
                                     <th>Subject Name</th>
                                     <th>Subject Type</th>
-                                    <th>Action</th>
+                                    <!-- <th>Action</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,9 +35,9 @@
                                     <tr>
                                         <td>{{ $value->subject_name }}</td>
                                         <td>{{ $value->subject_type }}</td>
-                                        <td>  
+                                        <!-- <td>  
                                           <a href="{{url('teacher/my_class_subject/class_timetable/'.$value->class_id. '/' .$value->subject_id)}}" class="btn btn-primary">My Class Timetable</a>
-                                        </td>
+                                        </td> -->
        
                                     </tr>
                                 @endforeach
