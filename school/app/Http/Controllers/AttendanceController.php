@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\ClassModel;
 use App\Models\Student;
 use App\Models\User;
@@ -88,7 +89,11 @@ class AttendanceController extends Controller
             $classarray = $value->class_id;
         }
         $data['getClass'] = $getClass;
+        if (empty($classarray)) {
+            $data['getRecord'] = new LengthAwarePaginator([], 0, 10);
+        } else {
         $data['getRecord'] = StudentAttendanceModel::getRecordTeacher($classarray);
+        }
         $data['header_title'] = "Attendance Report";
         return view('teacher.attendance.report',$data);
     }
