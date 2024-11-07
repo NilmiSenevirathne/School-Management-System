@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('admission_number')->nullable();
             $table->string('roll_number')->nullable();
-            $table->string('class_id')->nullable();
+            $table->unsignedBigInteger('class_id')->nullable(); 
             $table->string('name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('address')->nullable();
@@ -33,6 +33,8 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('parent_id')->references('id')->on('parent')->onDelete('cascade');
+            $table->foreign('class_id')->references('id')->on('class')->onDelete('cascade');
+
 
         });
     }
