@@ -174,12 +174,14 @@ class Student extends Model
 
     static public function getStudentClassA($class_id)
     {
-       return self::select('student.id','student.name','student.last_name')
+      /*return self::select('student.id','student.name','student.last_name')
                         ->where('user_type','=',3)
                         ->where('is_delete','=',0)
                         ->where('class_id','=',$class_id)
                         ->orderBy('id','desc')
-                        ->get();
+                        ->get();*/
+                        
+       return DB::select('CALL GetStudentClassA(?)', [$class_id]);
             
     }
 

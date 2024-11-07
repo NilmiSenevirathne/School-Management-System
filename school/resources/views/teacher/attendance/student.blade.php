@@ -12,7 +12,7 @@
             <h1>Student Attendance</h1>
           </div>
           <div class="col-sm-6" style ="text-align:right;">
-            <a href="{{ url('admin/attendance/student') }}" class="btn btn-primary">Add Student Attendance</a>
+            <a href="{{ url('teacher/attendance/student') }}" class="btn btn-primary">Add Student Attendance</a>
 
           </div>
           
@@ -39,11 +39,12 @@
                     <select class="form-control" id="getClass" name = "class_id" required>
                       <option value="">Select class</option>
                       @foreach($getClass as $class)
-                        <option value="{{ $class->id }}" {{ Request::get('class_id') == $class->id ? 'selected' : '' }} >
-                          {{ $class->name }}
+                        <option value="{{ $class->class_id }}" {{ Request::get('class_id') == $class->class_id ? 'selected' : '' }} >
+                          {{ $class->class_name }}
                         </option>
                       @endforeach
                     </select>
+                    <!--<input type="text" class="form-control" id="getStudentName" value ="{{ Request::get('class_id') }}" name ="class_id" placeholder="Enter name" required>-->
                   </div>
             
               <div class="form-group col-md-3">
@@ -53,7 +54,7 @@
 
               <div class="form-group col-md-3">
                 <button class = "btn btn-primary" type = "submit" style = "margin-top:30px;">Search</button>
-                <a href ="{{ url('admin/attendance/student') }}" class = "btn btn-success" style ="margin-top:30px;">Reset</a>
+                <a href ="{{ url('teacher/attendance/student') }}" class = "btn btn-success" style ="margin-top:30px;">Reset</a>
               </div>
             </div>
             </div>
@@ -75,11 +76,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if(!empty($getStudent) && count($getStudent) > 0)
+                            @if(!empty($getStudent) && !empty($getStudent->count()))
                                 @foreach($getStudent as $value)
                                  @php
                                   $attendance_type = '';
-                                  $getAttendance = App\Models\Student::getAttendance($value->id,Request::get('class_id'),Request::get('attendance_date'));
+                                  $getAttendance = $value->getAttendance($value->id,Request::get('class_id'),Request::get('attendance_date'));
                                   if(!empty($getAttendance->attendance_type))
                                   {
                                     $attendance_type = $getAttendance->attendance_type;
@@ -122,7 +123,7 @@
 
     $.ajax({
       type: "POST",
-      url: "{{ url('admin/attendance/student/save') }}",
+      url: "{{ url('teacher/attendance/student/save') }}",
       data : {
         "_token": "{{ csrf_token() }}",
         student_id : student_id,

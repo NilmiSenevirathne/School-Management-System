@@ -7,6 +7,7 @@ use App\Models\ClassModel;
 use App\Models\Student;
 use App\Models\User;
 use App\Models\StudentAttendanceModel;
+use App\Models\AssignClassTeacherModel;
 use Auth;
 
 class AttendanceController extends Controller
@@ -17,11 +18,18 @@ class AttendanceController extends Controller
         if(!empty($request->get('class_id')) && !empty($request->get('attendance_date'))){
 
             $data['getStudent'] = Student::getStudentClassA($request->get('class_id'));
+            $data['getAttendance'] = [];
+        foreach ($data['getStudent'] as $student) {
+            $attendance = Student::getAttendance($student->id, $request->get('class_id'), $request->get('attendance_date'));
+            $data['getAttendance'][$student->id] = $attendance;
+        }
         }
 
         $data['header_title'] = "Student Attendance";
         return view('admin.attendance.student',$data);
     }
+
+    
 
     public function AttendanceStudentSubmit(Request $request){ 
 
@@ -54,6 +62,35 @@ class AttendanceController extends Controller
         $data['getRecord'] = StudentAttendanceModel::getRecord();
         $data['header_title'] = "Attendance Report";
         return view('admin.attendance.report',$data);
+    }
+
+    //teacher side
+
+    public function AttendanceStudentTeacher(Request $request)
+    {
+        $data['getClass'] = AssignClassTeacherModel::getMyClassSubjectGroup(Auth::user()->id);
+
+        if(!empty($request->get('class_id')) && !empty($request->get('attendance_date'))){
+
+            $data['getStudent'] = Student::getStudentClassA($request->get('class_id'));
+        }
+
+        $data['header_title'] = "Student Attendance";
+        return view('teacher.attendance.student',$data);
+    }
+
+    public function AttendanceReportTeacher(Request $request)
+    {
+        $getClass = AssignClassTeacherModel::getMyClassSubjectGroup(Auth::user()->id);
+        $classarray = array();
+        foreach($getClass as $value)
+        {
+            $classarray = $value->class_id;
+        }
+        $data['getClass'] = $getClass;
+        $data['getRecord'] = StudentAttendanceModel::getRecordTeacher($classarray);
+        $data['header_title'] = "Attendance Report";
+        return view('teacher.attendance.report',$data);
     }
 
     
