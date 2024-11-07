@@ -205,10 +205,66 @@ public function MyTimetable(Request $request)
 }
 
 //teacher side
-public function MyTimetableTeacher($id)
+public function MyTimetableTeacher($class_id, $subject_id)
 {
-   dd($id);
+    // Get the logged-in teacher's email
+    $email = Auth::user()->email;
 
+    // Call the stored procedure TeacherFetchMyClassTimetable with teacher's email, class_id, and subject_id
+    $timetableData = \DB::select('CALL TeacherFetchMyClassTimetable(?, ?, ?)', [$email, $class_id, $subject_id]);
+
+    // Check if the procedure returned a message indicating no class_id
+    if (isset($timetableData[0]->message) && $timetableData[0]->message === 'Teacher not found or not assigned to a class') {
+        return redirect()->route('login')->with('error', 'Teacher not found or not assigned to a class');
+    }
+
+    // Retrieve class_name based on class_id
+    $class = \DB::table('class')->where('id', $class_id)->first();
+
+    // Check if class was found
+    if (!$class) {
+        return redirect()->route('login')->with('error', 'Class not found');
+    }
+
+    // Initialize an empty array to structure the timetable by week
+    $weekData = [];
+    
+    // Group timetable data by week_id and week_name
+    foreach ($timetableData as $entry) {
+        $weekId = $entry->week_id;
+        $weekName = $entry->week_name;
+
+        // Ensure the week_id key exists in the array
+        if (!isset($weekData[$weekId])) {
+            $weekData[$weekId] = [
+                'week_id' => $weekId,
+                'week_name' => $weekName,
+                'class_name' => $class->name, // Use the class_name property retrieved from the database
+                'timetable' => [],
+            ];
+        }
+
+        // Append timetable entry to the respective week's timetable
+        $weekData[$weekId]['timetable'][] = [
+            'subject_name' => $entry->subject_name,
+            'start_time' => $entry->start_time,
+            'end_time' => $entry->end_time,
+            'room_number' => $entry->room_number,
+        ];
+    }
+
+    // Convert associative array to an indexed array
+    $week = array_values($weekData);
+
+    // Prepare the data to be passed to the view
+    $data['week'] = $week;
+    $data['header_title'] = "My Timetable";
+
+    // Return the view with the timetable data
+    return view('teacher.my_timetable', $data);
 }
+
+
+
 
 }
