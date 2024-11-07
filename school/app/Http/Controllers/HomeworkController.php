@@ -33,20 +33,7 @@ class HomeworkController extends Controller
     }
     
 
-// public function storeHomework(Request $request)
-// {
-//     DB::statement('CALL AddHomework(?, ?, ?, ?, ?, ?, ?)', [
-//         $request->class_id,
-//         $request->subject_id,
-//         $request->homework_date,
-//         $request->submission_date,
-//         $request->document_file,
-//         $request->description,
-//         $request->created_by,
-//     ]);
 
-//     return redirect()->back()->with('success', 'Homework added successfully.');
-// }
 
 public function storeHomework(Request $request)
 {
@@ -75,51 +62,7 @@ public function storeHomework(Request $request)
 
 
 
-    // public function insert(Request $request)
-    // {
-    //     $homework = new HomeworkModel;
-    //     $homework->class_id = trim($request->class_id);
-    //     $homework->subject_id = trim($request->subject_id);
-    //     $homework->homework_date = trim($request->homework_date);
-    //     $homework->submission_date = trim($request->submission_date);
-    //     $homework->description = strip_tags(trim($request->description));
-    //     $homework->created_by = Auth::user()->id;
-    
-    //     // Check if a file is uploaded and handle saving
-    //     if ($request->hasFile('document_file')) {
-    //         $file = $request->file('document_file');
-    //         $filename = date('Ymdhis') . Str::random(20) . '.' . $file->getClientOriginalExtension();
-    //         $file->move(public_path('uploads/homework'), $filename);
-    
-    //         $homework->document_file = $filename;
-    //     }
-    
-    //     $homework->save();
-    //     return redirect('admin/homework/homework')->with('success', "Homework successfully created");
-    // }
-    
-
-// public function insert(Request $request)
-// {
-//     $filename = null;
-//     if ($request->hasFile('document_file')) {
-//         $file = $request->file('document_file');
-//         $filename = date('Ymdhis') . Str::random(20) . '.' . $file->getClientOriginalExtension();
-//         $file->move(public_path('uploads/homework'), $filename);
-//     }
-
-//     DB::statement('CALL InsertHomework(?, ?, ?, ?, ?, ?, ?)', [
-//         trim($request->class_id),
-//         trim($request->subject_id),
-//         trim($request->homework_date),
-//         trim($request->submission_date),
-//         strip_tags(trim($request->description)),
-//         $filename,
-//         Auth::user()->id
-//     ]);
-
-//     return redirect('admin/homework/homework')->with('success', "Homework successfully created");
-// }
+   
 
 public function insert(Request $request)
 {
@@ -175,68 +118,7 @@ public function insert(Request $request)
         return view('admin.homework.edit', $data); 
     }
 
-    // public function update(Request $request, $id)
-    // {
-    //     $homework = HomeworkModel::getSingle($id);
-    //     $homework->class_id = trim($request->class_id);
-    //     $homework->subject_id = trim($request->subject_id);
-    //     $homework->homework_date = trim($request->homework_date);
-    //     $homework->submission_date = trim($request->submission_date);
-    //     $homework->description = trim($request->description);
-        
-
-    //     if(!empty($request->file('document_file')))
-    //     {
-    //         $ext = $request->file('document_file')->getClientOriginalExtension();
-    //         $file = $request->file('document_file');
-    //         $randomStr = date('Ymdhis').Str::random(20);
-    //         $filename = strtolower($randomStr).'.'.$ext;
-    //         $file->move('uploads/homework/', $filename);
-
-    //         $homework->document_file = $filename;
-
-    //     }
-
-
-
-
-    //     $homework->save();
-
-    //     return redirect('admin/homework/homework')->with('success',"Homework successfully updated");
-    // } 
-//     public function update(Request $request, $id)
-// {
-//     $homework = HomeworkModel::getSingle($id);
     
-//     $homework->class_id = trim($request->class_id);
-//     $homework->subject_id = trim($request->subject_id);
-//     $homework->homework_date = trim($request->homework_date);
-//     $homework->submission_date = trim($request->submission_date);
-//     $homework->description = trim($request->description);
-    
-//     // Handle file upload if a new document is uploaded
-//     $documentFileName = null;
-//     if (!empty($request->file('document_file'))) {
-//         $ext = $request->file('document_file')->getClientOriginalExtension();
-//         $file = $request->file('document_file');
-//         $randomStr = date('Ymdhis').Str::random(20);
-//         $documentFileName = strtolower($randomStr) . '.' . $ext;
-//         $file->move('uploads/homework/', $documentFileName);
-//     }
-    
-//     // Call the stored procedure
-//     DB::select('CALL update_homework(?, ?, ?, ?, ?, ?, ?)', [
-//         $id,
-//         $homework->class_id,
-//         $homework->subject_id,
-//         $homework->homework_date,
-//         $homework->submission_date,
-//         $homework->description,
-//         $documentFileName
-//     ]);
-
-//     return redirect('admin/homework/homework')->with('success', "Homework successfully updated");
-// }
 
 public function update(Request $request, $id)
 {
@@ -274,15 +156,6 @@ public function update(Request $request, $id)
 }
 
 
-
-    // public function delete($id)
-    // {
-    //     $homework = HomeworkModel::getSingle($id);
-    //     $homework->is_delete = 1;
-    //     $homework->save();
-
-    //     return redirect()->back()->with('success',"Homework successfully deleted");
-    // }
     public function delete($id)
 {
     DB::select('CALL delete_homework(?)', [$id]);
@@ -291,10 +164,22 @@ public function update(Request $request, $id)
 }
 
 
-    // public function submitted($homework_id)
-    // {
-    //     $homework =   
-    // }
+public function submitted($homework_id)
+{
+    $homework = HomeworkModel::getSingle($homework_id); // Corrected line
+    if(!empty($homework))
+    {
+        $data['homework_id'] = $homework_id;
+        $data['getRecord'] = HomeworkSubmitModel::getRecord($homework_id);
+        $data['header_title'] = 'Submitted Homework';
+        return view('admin.homework.submitted', $data); 
+    }
+    else
+    {
+        abort(404);
+    }
+}
+
 
 
     //teacher side
@@ -492,6 +377,37 @@ public function updateTeacher(Request $request, $homeworkId)
 
     return redirect('teacher/homework/homework')->with('success', "Homework successfully updated");
 }
+
+public function submittedTeacher($homework_id)
+{
+    $homework = HomeworkModel::getSingle($homework_id); // Corrected line
+    if(!empty($homework))
+    {
+        $data['homework_id'] = $homework_id;
+        $data['getRecord'] = HomeworkSubmitModel::getRecord($homework_id);
+        $data['header_title'] = 'Submitted Homework';
+        return view('teacher.homework.submitted', $data); 
+    }
+    else
+    {
+        abort(404);
+    }
+}
+
+// public function submittedTeacher($homework_id)
+// {
+//     $homework = HomeworkModel::getSingle($homework_id); // Verify homework exists
+//     if (!empty($homework)) {
+//         $data['homework_id'] = $homework_id;
+//         $data['getRecord'] = DB::select('CALL GetSubmittedTeacherHomework(?)', [$homework_id]);
+//         $data['header_title'] = 'Submitted Homework';
+//         return view('teacher.homework.submitted', $data);
+//     } else {
+//         abort(404);
+//     }
+// }
+
+
 
 
 
