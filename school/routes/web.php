@@ -15,6 +15,7 @@ use App\Http\Controllers\ClassSubjectController;
 use App\Http\Controllers\ExaminationsController;
 use App\Http\Controllers\AssignClassTeacherController;
 use App\Http\Controllers\ClassTimetableController;
+use App\Http\Controllers\HomeworkController;
 
 /*
 |--------------------------------------------------------------------------
@@ -152,6 +153,8 @@ Route::group(['middleware' => 'admin'], function () {
     Route::post('admin/attendance/student/save', [AttendanceController::class, 'AttendanceStudentSubmit']);
     Route::get('admin/attendance/report', [AttendanceController::class, 'AttendanceReport']);
 
+
+    
      //Examination
 
      Route::get('admin/examinations/exam/list', [ExaminationsController::class, 'exam_list']);
@@ -176,6 +179,18 @@ Route::group(['middleware' => 'admin'], function () {
     Route::get('admin/examinations/marks_grade/edit/{id}', [ExaminationsController::class, 'marks_grade_edit']);
     Route::post('admin/examinations/marks_grade/edit/{id}', [ExaminationsController::class, 'marks_grade_update']);
     Route::get('admin/examinations/marks_grade/delete/{id}', [ExaminationsController::class, 'marks_grade_delete']);
+
+    //Homework
+    Route::get('admin/homework/homework', [HomeworkController::class, 'homework']);
+    //Route::get('homework', [HomeworkController::class, 'homeworks']);
+    Route::get('admin/homework/homework/add', [HomeworkController::class, 'add']);
+    Route::post('admin/ajax_get_subject', [HomeworkController::class, 'ajax_get_subject']);
+    Route::post('admin/homework/homework/add', [HomeworkController::class, 'insert']);
+    //Route::post('admin/homework/homework/add', [HomeworkController::class, 'store'])->name('homework.add');
+    Route::get('admin/homework/homework/edit/{id}', [HomeworkController::class, 'edit']);
+    Route::post('admin/homework/homework/edit/{id}', [HomeworkController::class, 'update']);
+    Route::get('admin/homework/homework/delete/{id}', [HomeworkController::class, 'delete']);
+
 
 
 
@@ -207,6 +222,16 @@ Route::group(['middleware' => 'teacher'], function () {
     Route::get('teacher/attendance/report', [AttendanceController::class, 'AttendanceReportTeacher']);
 
 
+    Route::get('teacher/homework/homework', [HomeworkController::class, 'HomeworkTeacher']);
+    Route::get('teacher/homework/homework/add', [HomeworkController::class, 'addTeacher']);
+    Route::post('teacher/ajax_get_subject', [HomeworkController::class, 'ajax_get_subject']);
+    Route::post('teacher/homework/homework/add', [HomeworkController::class, 'insertTeacher']);
+    Route::get('teacher/homework/homework/edit/{id}', [HomeworkController::class, 'editTeacher']);
+    //Route::post('teacher/homework/homework/edit/{id}', [HomeworkController::class, 'updateTeacher']);
+    Route::put('teacher/homework/homework/edit/{id}', [HomeworkController::class, 'updateTeacher']);
+    Route::get('teacher/homework/homework/delete/{id}', [HomeworkController::class, 'delete']);
+
+
 
 
 });
@@ -227,6 +252,14 @@ Route::group(['middleware' => 'student'], function () {
     Route::post('student/account', [StudentController::class, 'UpdateStudentAccount']);
 
     Route::get('student/my_exam_result', [ExaminationsController::class, 'MyExamResult']);
+
+
+    Route::get('student/my_homework', [HomeworkController::class, 'HomeworkStudent']);
+    Route::get('student/my_homework/submit_homework/{id}', [HomeworkController::class, 'SubmitHomework']);
+    Route::post('student/my_homework/submit_homework/{id}', [HomeworkController::class, 'SubmitHomeworkInsert']);
+
+    Route::get('student/my_submitted_homework', [HomeworkController::class, 'HomewarkSubmitedStudent']);
+
 
 
 });
