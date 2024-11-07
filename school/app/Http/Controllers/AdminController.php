@@ -32,43 +32,43 @@ class AdminController extends Controller
 
     
 
-    // public function insert(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'last_name' => 'required|string|max:255',
-    //         'address' => 'required|string|max:255',
-    //         'contact' => 'required|numeric|digits_between:10,15',
-    //         'email' => 'required|email|unique:admin|unique:users',
-    //         'password' => 'required|string|min:6',
-    //         'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' // Profile picture validation
-    //     ]);
+    public function insert(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'address' => 'required|string|max:255',
+            'contact' => 'required|numeric|digits_between:10,15',
+            'email' => 'required|email|unique:admin|unique:users',
+            'password' => 'required|string|min:6',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048' // Profile picture validation
+        ]);
     
-    //     // Handle profile picture upload
-    //     $profilePictureName = null;
-    //     if ($request->hasFile('profile_picture')) {
-    //         $file = $request->file('profile_picture');
-    //         $extension = $file->getClientOriginalExtension();
-    //         $profilePictureName = Str::random(20) . '.' . $extension;
-    //         $file->move(public_path('uploads/admin'), $profilePictureName);
-    //     }
+        // Handle profile picture upload
+        $profilePictureName = null;
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $extension = $file->getClientOriginalExtension();
+            $profilePictureName = Str::random(20) . '.' . $extension;
+            $file->move(public_path('uploads/admin'), $profilePictureName);
+        }
     
-    //     $passwordHash = Hash::make($request->password);
+        $passwordHash = Hash::make($request->password);
     
-    //     // Execute the stored procedure
-    //     DB::statement('CALL InsertAdminAndUser(?, ?, ?, ?, ?, ?, ?, ?)', [
-    //         $request->name,
-    //         $request->last_name,
-    //         $request->address,
-    //         $request->contact,
-    //         $request->email,
-    //         $passwordHash,
-    //         1, // Admin user type
-    //         $profilePictureName
-    //     ]);
+        // Execute the stored procedure
+        DB::statement('CALL InsertAdminAndUser(?, ?, ?, ?, ?, ?, ?, ?)', [
+            $request->name,
+            $request->last_name,
+            $request->address,
+            $request->contact,
+            $request->email,
+            $passwordHash,
+            1, // Admin user type
+            $profilePictureName
+        ]);
     
-    //     return redirect('admin/admin/list')->with('success', 'Admin added successfully');
-    // }
+        return redirect('admin/admin/list')->with('success', 'Admin added successfully');
+    }
     
  
 
