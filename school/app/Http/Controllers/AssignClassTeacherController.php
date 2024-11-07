@@ -176,26 +176,13 @@ class AssignClassTeacherController extends Controller
 
     
     //delete the record 
-    // public function delete($id)
-    // {
-    //      // Call the stored procedure with the assigned class teacher ID
-    //      DB::statement('CALL delete_assigned_class_teacher(?)', [$id]);
-
-    //      return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
-    // }
     public function delete($id)
-{
-    // Call the SQL function with the assigned class teacher ID
-    $result = DB::select('SELECT delete_newassigned_class_teacher(?) AS result', [$id]);
+    {
+         // Call the stored procedure with the assigned class teacher ID
+         DB::statement('CALL delete_assigned_class_teacher(?)', [$id]);
 
-    // Check the result of the function
-    if ($result[0]->result) {
-        return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
-    } else {
-        return redirect()->route('admin.assign_class_teacher.list')->with('error', 'Failed to delete record. It may not exist or has already been deleted.');
+         return redirect()->route('admin.assign_class_teacher.list')->with('success', 'Record deleted successfully.');
     }
-}
-
 
 
 // teacher side work
