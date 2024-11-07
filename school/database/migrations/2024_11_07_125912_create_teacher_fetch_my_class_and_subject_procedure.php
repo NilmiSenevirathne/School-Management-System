@@ -17,7 +17,9 @@ class CreateTeacherFetchMyClassAndSubjectProcedure extends Migration
                     act.*, 
                     c.name AS class_name,
                     s.name AS subject_name,
-                    s.type AS subject_type
+                    s.type AS subject_type,
+                     cs.class_id AS class_id,
+                    cs.subject_id AS subject_id
                 FROM assign_class_teacher AS act
                 INNER JOIN class AS c ON c.id = act.class_id
                 INNER JOIN class_subject AS cs ON cs.class_id = c.id

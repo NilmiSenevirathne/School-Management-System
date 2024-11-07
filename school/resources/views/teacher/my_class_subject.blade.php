@@ -44,9 +44,9 @@
                       <td>{{ $value->subject_name }}</td>
                       <td>{{ $value->subject_type }}</td>
                       <td>{{ date('d-m-Y H:i A', strtotime($value->created_at)) }}</td>
-                      <td>  
-                        <a href="{{url('teacher/my_class_subject/class_timetable/'.$value->class_id. '/' .$value->subject_id)}}" class="btn btn-primary">My Class Timetable</a></td>
-       
+                      <td>
+                           <a href="{{url('teacher/my_class_subject/class_timetable/' .$value->class_id.'/' .$value->subject_id)}}" class="btn btn-primary">My Class Timetable</a>
+                      </td>
                     </tr>
                   @endforeach
                 @endif
