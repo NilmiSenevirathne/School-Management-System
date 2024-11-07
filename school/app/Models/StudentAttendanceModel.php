@@ -90,9 +90,10 @@ class StudentAttendanceModel extends Model
                 $return = $return->where('student_attendance.attendance_type','=',Request::get('attendance_type'));
             }
     
-           $return = $return->orderBy('student_attendance.id','desc')
+           return $return->orderBy('student_attendance.id','desc')
             ->paginate(10);
-        return $return;
+        //return $return;
+        return new LengthAwarePaginator([], 0, 10);
         }
         else
         {
